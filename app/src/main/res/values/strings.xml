@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">DefetctDetect</string>
+    <string name="title_camera">Camera</string>
+    <string name="title_map">Map</string>
+    <string name="title_potholes">Potholes</string>
+</resources>
