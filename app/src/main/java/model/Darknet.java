@@ -1,6 +1,12 @@
 package model;
 
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+
+import com.example.dpgra.defetctdetect.CameraFragment;
+import com.example.dpgra.defetctdetect.MapFragment;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -15,7 +21,7 @@ import org.opencv.dnn.Net;
 import org.opencv.videoio.VideoCapture;
 
 public class Darknet {
-	
+
 	private static Dnn deepNetworkLoader;
 	private Net network;
 	private File cfg;

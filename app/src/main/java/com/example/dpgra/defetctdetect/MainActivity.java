@@ -14,6 +14,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 import java.util.List;
 
 import model.Darknet;
@@ -32,19 +35,29 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-
+            Fragment fragment = null;
             switch (item.getItemId()) {
                 case R.id.camera:
                     System.out.println("Selected camera");
-                    transaction.replace(R.id.frameholder, manager.findFragmentById(R.id.cameraFrag)).commit();
+                    fragment = new CameraFragment();
+                    transaction.replace(R.id.frameholder, fragment);
+                    //transaction.addToBackStack(null);
+                    transaction.commit();
                     return true;
                 case R.id.map:
                     System.out.println("Selected map");
-                    transaction.replace(R.id.frameholder, manager.findFragmentById(R.id.mapFrag)).commit();
+                    fragment = new MapFragment();
+                    transaction.replace(R.id.frameholder, fragment);
+                    //transaction.addToBackStack(null);
+                    //transaction.setTransition(1);
+                    transaction.commit();
                     return true;
                 case R.id.list:
                     System.out.println("Selected list");
-                    transaction.replace(R.id.frameholder, manager.findFragmentById(R.id.listFrag)).commit();
+                    fragment = new PotholeListFragment();
+                    transaction.replace(R.id.frameholder, fragment);
+                    //transaction.addToBackStack(null);
+                    transaction.commit();
                     return true;
             }
             return false;
@@ -58,10 +71,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(R.id.camera);
-        if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions(this, permissions, 1);
         }
+        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS ) {
+            GoogleApiAvailability.getInstance().getErrorDialog(this, GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this), 1);
+        }
+        //Set default fragment
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.frameholder, new CameraFragment()).commit();
+
        // mTextMessage = (TextView) findViewById(R.id.message);
         //BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation_dashboard);
         //navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
