@@ -94,7 +94,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         }
         if ( loc != null ) {
             LatLng myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
-            gmap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 14.25));
         } else {
             System.err.print("Could not get location.");
         }
