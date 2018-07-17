@@ -2,8 +2,11 @@ package com.example.dpgra.defetctdetect;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,12 +23,28 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     private MapView mapView;
     private GoogleMap gmap;
     private View mView;
+
+    private static MapFragment mapFragment;
+
+    @SuppressLint("ValidFragment")
+    private MapFragment() {
+        super();
+    }
+
+    public static MapFragment getInstance() {
+        if ( mapFragment == null ) {
+            mapFragment = new MapFragment();
+        }
+        return mapFragment;
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,21 +76,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         MapsInitializer.initialize(getContext());
         gmap = googleMap;
-        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this.getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION};
+
+            ActivityCompat.requestPermissions(this.getActivity(), permissions, 1);
         }
+        LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         gmap.setMyLocationEnabled(true);
-        //Location currentLocation = gmap.getMyLocation();
-        gmap.setMinZoomPreference(12);
-        LatLng myLocation = new LatLng(40.7128, 74.0060);
-        gmap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+
+        Location loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if ( loc == null ) {
+            loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+        if ( loc != null ) {
+            LatLng myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
+            gmap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+        } else {
+            System.err.print("Could not get location.");
+        }
 
     }
 
@@ -115,5 +142,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onLowMemory() {
         mapView.onLowMemory();
         super.onLowMemory();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
     }
 }
