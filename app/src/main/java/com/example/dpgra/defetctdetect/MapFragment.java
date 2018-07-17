@@ -88,6 +88,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         }
         LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         gmap.setMyLocationEnabled(true);
+
         Location loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if ( loc == null ) {
             loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -98,7 +99,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         } else {
             System.err.print("Could not get location.");
         }
-
 
     }
 
