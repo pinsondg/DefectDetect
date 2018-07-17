@@ -75,28 +75,29 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AssetManager assetManager = getResources().getAssets();
+        String[] fileDir = {};
         try {
-            String[] str = assetManager.list("yolo");
-            System.out.println(Arrays.toString(str));
+            fileDir = assetManager.list("yolo");
         }
         catch(IOException e) {
             e.printStackTrace();
         }
 
-        File fileDir = getActivity().getFilesDir();
-        System.out.println(fileDir.getAbsolutePath());
+        System.out.println(Arrays.toString(fileDir));
         File cfgFile = null;
         File weightsFile = null;
-        for ( File file : fileDir.listFiles() ) {
-            if ( file.getName().endsWith(".cfg") ) {
-                cfgFile = file;
-            } else if ( file.getName().endsWith(".weights") ) {
-                weightsFile = file;
+        for ( String file : fileDir) {
+            if ( file.endsWith(".cfg") ) {
+                cfgFile = new File(file);
+            } else if ( file.endsWith(".weights") ) {
+                weightsFile = new File(file);
             }
-            System.out.println(file.getAbsolutePath());
         }
+        System.out.println(cfgFile.getAbsolutePath());
+        System.out.println(weightsFile.getAbsolutePath());
+
         if ( cfgFile != null && weightsFile != null ) {
-            net = new Darknet(cfgFile.getAbsolutePath(), weightsFile.getAbsolutePath());
+            net = new Darknet("/home/vamsi/DefetctDetect/app/src/main/assets/yolo/"+cfgFile, "/home/vamsi/DefetctDetect/app/src/main/assets/yolo/"+weightsFile);
         }
     }
 
