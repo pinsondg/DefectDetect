@@ -49,6 +49,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         }
     };
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +80,6 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.camera_fragment, container, false);
         mOpenCvCameraView = (CameraBridgeViewBase) rootView.findViewById(R.id.CameraView);
-        mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
         return rootView;
     }
@@ -90,6 +94,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public void onCameraViewStarted(int width, int height) {
 
+        mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
     }
 
     /**

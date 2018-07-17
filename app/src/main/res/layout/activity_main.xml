@@ -14,23 +14,28 @@
         android:layout_marginBottom="?attr/actionBarSize"
         android:visibility="visible" />
 
+    <!---
     <fragment
         android:id="@+id/cameraFrag"
         android:name="com.example.dpgra.defetctdetect.CameraFragment"
+        class="com.example.dpgra.defetctdetect.CameraFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <fragment
         android:id="@+id/mapFrag"
         android:name="com.example.dpgra.defetctdetect.MapFragment"
+        class="com.example.dpgra.defetctdetect.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <fragment
         android:id="@+id/listFrag"
         android:name="com.example.dpgra.defetctdetect.PotholeListFragment"
+        class="com.example.dpgra.defetctdetect.PotholeListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+        -->
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav"

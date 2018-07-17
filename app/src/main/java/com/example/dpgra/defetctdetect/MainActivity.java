@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Darknet net;
     private BottomNavigationView bottomNavigationView;
     private List<Fragment> fragList;
+    private Fragment currentFragment;
 
 
 
@@ -36,18 +37,19 @@ public class MainActivity extends AppCompatActivity {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Fragment fragment = null;
+            transaction.remove(currentFragment);
             switch (item.getItemId()) {
                 case R.id.camera:
                     System.out.println("Selected camera");
                     fragment = new CameraFragment();
-                    transaction.replace(R.id.frameholder, fragment);
+                    transaction.add(R.id.frameholder, fragment);
                     //transaction.addToBackStack(null);
                     transaction.commit();
                     return true;
                 case R.id.map:
                     System.out.println("Selected map");
                     fragment = new MapFragment();
-                    transaction.replace(R.id.frameholder, fragment);
+                    transaction.add(R.id.frameholder, fragment);
                     //transaction.addToBackStack(null);
                     //transaction.setTransition(1);
                     transaction.commit();
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.list:
                     System.out.println("Selected list");
                     fragment = new PotholeListFragment();
-                    transaction.replace(R.id.frameholder, fragment);
+                    transaction.add(R.id.frameholder, fragment);
                     //transaction.addToBackStack(null);
                     transaction.commit();
                     return true;
@@ -82,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
         }
         //Set default fragment
         FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.frameholder, new CameraFragment()).commit();
+        currentFragment = new CameraFragment();
+        manager.beginTransaction().add(R.id.frameholder, currentFragment).commitNow();
 
        // mTextMessage = (TextView) findViewById(R.id.message);
         //BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation_dashboard);
