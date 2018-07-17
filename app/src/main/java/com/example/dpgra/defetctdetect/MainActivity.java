@@ -41,15 +41,17 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.camera:
                     System.out.println("Selected camera");
-                    fragment = new CameraFragment();
+                    fragment = CameraFragment.getInstance();
                     transaction.add(R.id.frameholder, fragment);
+                    currentFragment = fragment;
                     //transaction.addToBackStack(null);
                     transaction.commit();
                     return true;
                 case R.id.map:
                     System.out.println("Selected map");
-                    fragment = new MapFragment();
+                    fragment = MapFragment.getInstance();
                     transaction.add(R.id.frameholder, fragment);
+                    currentFragment = fragment;
                     //transaction.addToBackStack(null);
                     //transaction.setTransition(1);
                     transaction.commit();
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("Selected list");
                     fragment = new PotholeListFragment();
                     transaction.add(R.id.frameholder, fragment);
+                    currentFragment = fragment;
                     //transaction.addToBackStack(null);
                     transaction.commit();
                     return true;
@@ -74,9 +77,8 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(R.id.camera);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION};
+        if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
+            String[] permissions = {Manifest.permission.CAMERA};
             ActivityCompat.requestPermissions(this, permissions, 1);
         }
         if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this) != ConnectionResult.SUCCESS ) {
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
         //Set default fragment
         FragmentManager manager = getSupportFragmentManager();
-        currentFragment = new CameraFragment();
+        currentFragment = CameraFragment.getInstance();
         manager.beginTransaction().add(R.id.frameholder, currentFragment).commitNow();
 
        // mTextMessage = (TextView) findViewById(R.id.message);

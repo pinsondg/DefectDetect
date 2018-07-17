@@ -30,6 +30,19 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private Darknet net;
+    private static CameraFragment cameraFragment;
+
+
+    private CameraFragment() {
+        super();
+    }
+
+    public static CameraFragment getInstance() {
+        if ( cameraFragment == null ) {
+            cameraFragment = new CameraFragment();
+        }
+        return cameraFragment;
+    }
 
     private final BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this.getActivity()) {
         @SuppressLint("LongLogTag")
