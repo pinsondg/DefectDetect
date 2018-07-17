@@ -68,9 +68,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
         gmap.setMyLocationEnabled(true);
-        Location currentLocation = gmap.getMyLocation();
+        //Location currentLocation = gmap.getMyLocation();
         gmap.setMinZoomPreference(12);
-        LatLng myLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        LatLng myLocation = new LatLng(40.7128, 74.0060);
         gmap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
 
     }

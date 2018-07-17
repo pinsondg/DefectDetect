@@ -2,6 +2,7 @@ package com.example.dpgra.defetctdetect;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,8 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 
 import model.Darknet;
 
@@ -58,6 +61,15 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AssetManager assetManager = getResources().getAssets();
+        try {
+            String[] str = assetManager.list("yolo");
+            System.out.println(Arrays.toString(str));
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
         File fileDir = getActivity().getFilesDir();
         System.out.println(fileDir.getAbsolutePath());
         File cfgFile = null;
