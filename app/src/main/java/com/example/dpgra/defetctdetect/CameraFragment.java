@@ -155,14 +155,15 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2RGB);
         if ( net != null ) {
             Mat retMat = net.forwardLoadedNetwork(frame);
-            printMat(retMat);
             for ( int i = 0; i < retMat.rows(); i++ ) {
                 double confidence = retMat.get(i, 4)[0];
-                if ( confidence > 25 ) {
-                    double xCenter = retMat.get(i, 0)[0];
-                    double yCenter = retMat.get(i, 1)[0];
-                    double width = retMat.get(i, 2)[0];
-                    double height = retMat.get(i, 4)[0];
+                if ( confidence > 0.3 ) {
+                    printMat(retMat.row(i));
+                    System.out.print("YESSSSSS");
+                    double xCenter = retMat.get(i, 0)[0]*416;
+                    double yCenter = retMat.get(i, 1)[0]*416;
+                    double width = retMat.get(i, 2)[0]*416;
+                    double height = retMat.get(i, 3)[0]*416;
                     Imgproc.rectangle(frame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
                             , yCenter + height / 2), new Scalar(255, 255, 0));
                 }
