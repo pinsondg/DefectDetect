@@ -20,6 +20,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.BufferedInputStream;
@@ -153,18 +154,37 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat frame = inputFrame.rgba();
         Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2RGB);
+
+        int cols = frame.cols();
+        int rows = frame.rows();
+        Size cropSize;
+        if ((float)cols / rows > 1) {
+            cropSize = new Size(rows * 1, rows);
+        } else {
+            cropSize = new Size(cols, cols / 1);
+        }
+        int y1 = (int)(rows - cropSize.height) / 2;
+        int y2 = (int)(y1 + cropSize.height);
+        int x1 = (int)(cols - cropSize.width) / 2;
+        int x2 = (int)(x1 + cropSize.width);
+        Mat subFrame = frame.submat(y1, y2, x1, x2);
+        cols = subFrame.cols();
+        rows = subFrame.rows();
+
+        System.out.print(frame.height());
+        System.out.print(frame.width());
         if ( net != null ) {
             Mat retMat = net.forwardLoadedNetwork(frame);
             for ( int i = 0; i < retMat.rows(); i++ ) {
-                double confidence = retMat.get(i, 4)[0];
-                if ( confidence > 0.3 ) {
+                double confidence = retMat.get(i, 5)[0];
+                if ( confidence > 0.6 ) {
                     printMat(retMat.row(i));
                     System.out.print("YESSSSSS");
-                    double xCenter = retMat.get(i, 0)[0]*416;
-                    double yCenter = retMat.get(i, 1)[0]*416;
-                    double width = retMat.get(i, 2)[0]*416;
-                    double height = retMat.get(i, 3)[0]*416;
-                    Imgproc.rectangle(frame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
+                    double xCenter = retMat.get(i, 0)[0]*cols;
+                    double yCenter = retMat.get(i, 1)[0]*rows;
+                    double width = retMat.get(i, 2)[0]*cols;
+                    double height = retMat.get(i, 3)[0]*rows;
+                    Imgproc.rectangle(subFrame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
                             , yCenter + height / 2), new Scalar(255, 255, 0));
                 }
             }
