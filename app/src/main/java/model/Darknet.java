@@ -1,24 +1,18 @@
 package model;
 
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-
-import com.example.dpgra.defetctdetect.CameraFragment;
-import com.example.dpgra.defetctdetect.MapFragment;
+import android.annotation.SuppressLint;
+import android.util.Log;
 
 import java.io.File;
-import java.io.IOException;
 
+import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
+import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
-import org.opencv.videoio.VideoCapture;
 
 public class Darknet {
 
@@ -26,8 +20,8 @@ public class Darknet {
 	private Net network;
 	private File cfg;
 	private File model;
-	
-	public Darknet( String cfg, String model) {
+
+	public Darknet(String cfg, String model) {
 		this.cfg = new File( cfg );
 		this.model = new File( model );
 		deepNetworkLoader = new Dnn();

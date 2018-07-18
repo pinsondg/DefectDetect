@@ -1,14 +1,12 @@
 package com.example.dpgra.defetctdetect;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPropertyAnimatorListener;
-import android.support.v7.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +34,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     private static CameraFragment cameraFragment;
 
 
+    @SuppressLint("ValidFragment")
     private CameraFragment() {
         super();
     }
@@ -74,6 +73,26 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.camera_fragment, container, false);
+        mOpenCvCameraView = (CameraBridgeViewBase) rootView.findViewById(R.id.CameraView);
+        mOpenCvCameraView.setCvCameraViewListener(this);
+        return rootView;
+    }
+
+    /**
+     * This method is invoked when camera preview has started. After this method is invoked
+     * the frames will start to be delivered to client via the onCameraFrame() callback.
+     *
+     * @param width  -  the width of the frames that will be delivered
+     * @param height - the height of the frames that will be delivered
+     */
+    @Override
+    public void onCameraViewStarted(int width, int height) {
         AssetManager assetManager = getResources().getAssets();
         String[] fileDir = {};
         try {
@@ -97,30 +116,9 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         System.out.println(weightsFile.getAbsolutePath());
 
         if ( cfgFile != null && weightsFile != null ) {
-            net = new Darknet("/home/vamsi/DefetctDetect/app/src/main/assets/yolo/"+cfgFile, "/home/vamsi/DefetctDetect/app/src/main/assets/yolo/"+weightsFile);
+            net = new Darknet( cfgFile, weightsFile );
         }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.camera_fragment, container, false);
-        mOpenCvCameraView = (CameraBridgeViewBase) rootView.findViewById(R.id.CameraView);
-        mOpenCvCameraView.setCvCameraViewListener(this);
-        return rootView;
-    }
-
-    /**
-     * This method is invoked when camera preview has started. After this method is invoked
-     * the frames will start to be delivered to client via the onCameraFrame() callback.
-     *
-     * @param width  -  the width of the frames that will be delivered
-     * @param height - the height of the frames that will be delivered
-     */
-    @Override
-    public void onCameraViewStarted(int width, int height) {
-
-        mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
+        //mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
     }
 
     /**
