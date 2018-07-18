@@ -155,8 +155,8 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2RGB);
         if ( net != null ) {
             Mat retMat = net.forwardLoadedNetwork(frame);
+            printMat(retMat);
             for ( int i = 0; i < retMat.rows(); i++ ) {
-
                 double confidence = retMat.get(i, 4)[0];
                 if ( confidence > 25 ) {
                     double xCenter = retMat.get(i, 0)[0];
@@ -171,6 +171,21 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
             Log.i("System", "Problem forwarding network");
         }
         return frame;
+    }
+
+    private void printMat( Mat mat ) {
+        for ( int i = 0; i < mat.rows(); i++) {
+            System.out.print("[");
+            for ( int n = 0; n < mat.cols(); n++ ) {
+                try {
+                    System.out.printf( "%.2f ", mat.get(i, n)[0]);
+                } catch ( NullPointerException e) {
+                    System.out.print( " " );
+                }
+
+            }
+            System.out.println("]");
+        }
     }
 
     @Override

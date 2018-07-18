@@ -302,7 +302,7 @@ public class Net {
     //
 
     //javadoc: Net::forward(outputBlobs, outputName)
-    public  void forward(List<Mat> outputBlobs, String outputName)
+    public void forward(List<Mat> outputBlobs, String outputName)
     {
         Mat outputBlobs_mat = new Mat();
         forward_2(nativeObj, outputBlobs_mat.nativeObj, outputName);
