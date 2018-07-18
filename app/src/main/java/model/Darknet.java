@@ -53,12 +53,12 @@ public class Darknet {
 	}
 	
 	public Mat forwardLoadedNetwork( Mat image ) {
-		image = Dnn.blobFromImage(image, .007843, new Size(448, 448),
-			new Scalar(127.5, 127.5, 127.5) , true, false);
+		//image = Dnn.blobFromImage(image, .007843, new Size(416, 416),
+			//new Scalar(127.5, 127.5, 127.5) , false, false);
 		long time1 = System.nanoTime();
-		//image = Dnn.blobFromImage(image);
-		network.setInput(image);
-		Mat retBlob = network.forward();
+		image = Dnn.blobFromImage(image);
+		network.setInput(image, "data");
+		Mat retBlob = network.forward("detection_out");
 		long time2 = System.nanoTime();
 		System.out.println("Took " + (time2 - time1) * Math.pow(10, -9) + "s to forward network");
 		return retBlob;

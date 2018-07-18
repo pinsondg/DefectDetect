@@ -1,6 +1,7 @@
 package com.example.dpgra.defetctdetect;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,11 +22,16 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import model.Darknet;
+
+import static org.opencv.android.BaseLoaderCallback.TAG;
 
 public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvCameraViewListener2 {
 
@@ -94,9 +100,10 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public void onCameraViewStarted(int width, int height) {
         AssetManager assetManager = getResources().getAssets();
+        /*
         String[] fileDir = {};
         try {
-            fileDir = assetManager.list("yolo");
+            fileDir = assetManager.list("debug");
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -114,6 +121,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         }
         System.out.println(cfgFile.getAbsolutePath());
         System.out.println(weightsFile.getAbsolutePath());
+        */
+
+        String cfgFile = getPath("yolov2-tiny2.cfg", this.getActivity());
+        String weightsFile = getPath("yolov2-tiny2_36500.weights", this.getActivity());
+
 
         if ( cfgFile != null && weightsFile != null ) {
             net = new Darknet( cfgFile, weightsFile );
@@ -141,7 +153,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat frame = inputFrame.rgba();
         if ( net != null ) {
-            Mat retMat = net.forwardLoadedNetwork(inputFrame);
+            Mat retMat = net.forwardLoadedNetwork(frame);
             for ( int i = 0; i < retMat.rows(); i++ ) {
 
                 double confidence = retMat.get(i, 4)[0];
@@ -170,5 +182,30 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
             Log.d("Debug", "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
+    }
+
+    @SuppressLint("LongLogTag")
+    private static String getPath(String file, Context context) {
+        AssetManager assetManager = context.getAssets();
+
+        BufferedInputStream inputStream = null;
+        try {
+            // Read data from assets.
+            inputStream = new BufferedInputStream(assetManager.open(file));
+            byte[] data = new byte[inputStream.available()];
+            inputStream.read(data);
+            inputStream.close();
+
+            // Create copy file in storage.
+            File outFile = new File(context.getFilesDir(), file);
+            FileOutputStream os = new FileOutputStream(outFile);
+            os.write(data);
+            os.close();
+            // Return a path to file which may be read in common way.
+            return outFile.getAbsolutePath();
+        } catch (IOException ex) {
+            Log.i(TAG, "Failed to upload a file");
+        }
+        return "";
     }
 }
