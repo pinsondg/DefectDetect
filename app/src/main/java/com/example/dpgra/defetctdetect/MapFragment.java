@@ -45,6 +45,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         return mapFragment;
     }
 
+    public GoogleMap getGmap() {
+        return gmap;
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

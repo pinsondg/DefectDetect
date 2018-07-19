@@ -9,10 +9,16 @@ import java.io.Serializable;
 
 public class Pothole implements Serializable {
 
-    private Location location;
-    private Image image;
+    public static final int SMALL_POTHOLE = 0;
+    public static final int MEDIUM_POTHOLE = 1;
+    public static final int LARGE_POTHOLE = 2;
 
-    public Pothole() {
+    private Location location;
+    private String id;
+    private int size;
+
+
+    public Pothole( Location location, String id, int size ) {
 
     }
 

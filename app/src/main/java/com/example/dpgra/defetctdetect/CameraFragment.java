@@ -3,6 +3,8 @@ package com.example.dpgra.defetctdetect;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +14,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -31,6 +38,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import model.Darknet;
+import model.Pothole;
 
 import static org.opencv.android.BaseLoaderCallback.TAG;
 
@@ -39,6 +47,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     private CameraBridgeViewBase mOpenCvCameraView;
     private Darknet net;
     private static CameraFragment cameraFragment;
+    private int potholeCount = 0;
 
 
     @SuppressLint("ValidFragment")
@@ -179,13 +188,17 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                 double confidence = retMat.get(i, 5)[0];
                 if ( confidence > 0.6 ) {
                     printMat(retMat.row(i));
-                    System.out.print("YESSSSSS");
+                    System.out.println("YESSSSSS");
                     double xCenter = retMat.get(i, 0)[0]*cols;
                     double yCenter = retMat.get(i, 1)[0]*rows;
                     double width = retMat.get(i, 2)[0]*cols;
                     double height = retMat.get(i, 3)[0]*rows;
                     Imgproc.rectangle(subFrame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
                             , yCenter + height / 2), new Scalar(255, 255, 0));
+                    Pothole pothole = createPothole();
+                    if (placeMarker(pothole)) {
+                        System.out.println("Marker placed!");
+                    }
                 }
             }
         } else {
@@ -194,19 +207,50 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         return frame;
     }
 
+    private Pothole createPothole() {
+        LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+        @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Pothole pothole = new Pothole( location, createPotholeId(), Pothole.SMALL_POTHOLE);
+        return pothole;
+    }
+
+    private String createPotholeId() {
+        String retId = "p" + potholeCount;
+        potholeCount++;
+        return retId;
+    }
+
     private void printMat( Mat mat ) {
         for ( int i = 0; i < mat.rows(); i++) {
-            System.out.print("[");
+            System.out.print("[ ");
             for ( int n = 0; n < mat.cols(); n++ ) {
                 try {
                     System.out.printf( "%.2f ", mat.get(i, n)[0]);
-                } catch ( NullPointerException e) {
+                } catch (NullPointerException e) {
                     System.out.print( " " );
                 }
 
             }
             System.out.println("]");
         }
+    }
+
+    private boolean placeMarker(Pothole pothole) {
+        LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+        GoogleMap gmap = MapFragment.getInstance().getGmap();
+        Location location;
+        try {
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        } catch (SecurityException e) {
+            System.err.println("Location services not enabled.");
+            return false;
+        }
+        double lat = location.getLatitude();
+        double lon = location.getLongitude();
+        Marker marker = gmap.addMarker(new MarkerOptions().position(new LatLng(lat,lon)));
+        marker.setTag(pothole);
+
+        return true;
     }
 
     @Override
