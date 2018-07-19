@@ -39,6 +39,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import model.Darknet;
@@ -52,11 +54,17 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     private Darknet net;
     private static CameraFragment cameraFragment;
     private int potholeCount = 0;
+    private Map<MarkerOptions, Pothole> markerOptionsMap;
 
 
     @SuppressLint("ValidFragment")
     private CameraFragment() {
         super();
+
+    }
+
+    public Map<MarkerOptions, Pothole> getMarkerOptionsMap() {
+        return markerOptionsMap;
     }
 
     public static CameraFragment getInstance() {

@@ -29,7 +29,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     private MapView mapView;
     private GoogleMap gmap;
-    private View mView;
 
     private static MapFragment mapFragment;
 
@@ -49,6 +48,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         return gmap;
     }
 
+    public MapView getMapView() {
+        return mapView;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.mapfragment, container, false);
         MapsInitializer.initialize(this.getActivity());
+
         return mView;
     }
 
@@ -78,7 +81,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(this.getActivity());
+        System.out.println("ON MAP READY!");
         gmap = googleMap;
+
         if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this.getActivity(),
@@ -95,8 +100,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         Location loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if ( loc == null ) {
             loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        }
-        if ( loc != null ) {
+        } else if ( loc != null ) {
             LatLng myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
             gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 14.25));
         } else {
@@ -119,12 +123,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public void onResume() {
+        System.out.print("MAP RUSUMED!");
         mapView.onResume();
         super.onResume();
     }
 
     @Override
     public void onPause() {
+        System.out.println("MAP PAUSED!");
         mapView.onPause();
         super.onPause();
     }
