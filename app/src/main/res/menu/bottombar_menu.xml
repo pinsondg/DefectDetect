@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/map"
-        android:icon="@drawable/ic_map_black_24dp"
-        android:title="@string/title_map"
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:id="@+id/camera"
         android:icon="@drawable/ic_videocam_black_24dp"
         android:title="@string/title_camera"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/map"
+        android:icon="@drawable/ic_map_black_24dp"
+        android:title="@string/title_map"
         app:showAsAction="ifRoom"/>
 
     <item

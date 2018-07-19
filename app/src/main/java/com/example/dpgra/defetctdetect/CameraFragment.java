@@ -1,13 +1,16 @@
 package com.example.dpgra.defetctdetect;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
 import android.util.Log;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -194,7 +198,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     double width = retMat.get(i, 2)[0]*cols;
                     double height = retMat.get(i, 3)[0]*rows;
                     Imgproc.rectangle(subFrame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
-                            , yCenter + height / 2), new Scalar(255, 255, 0));
+                            , yCenter + height / 2), new Scalar(255, 0, 0), 4);
                     Pothole pothole = createPothole();
                     if (placeMarker(pothole)) {
                         System.out.println("Marker placed!");
@@ -235,21 +239,33 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         }
     }
 
-    private boolean placeMarker(Pothole pothole) {
+    private boolean placeMarker(final Pothole pothole) {
         LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
-        GoogleMap gmap = MapFragment.getInstance().getGmap();
-        Location location;
+        Location location = null;
         try {
             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         } catch (SecurityException e) {
-            System.err.println("Location services not enabled.");
-            return false;
-        }
-        double lat = location.getLatitude();
-        double lon = location.getLongitude();
-        Marker marker = gmap.addMarker(new MarkerOptions().position(new LatLng(lat,lon)));
-        marker.setTag(pothole);
+            if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this.getActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+                String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION};
+
+                ActivityCompat.requestPermissions(this.getActivity(), permissions, 0);
+            }
+        }
+        final double lat = location.getLatitude();
+        final double lon = location.getLongitude();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                GoogleMap gmap = MapFragment.getInstance().getGmap();
+                Marker marker = gmap.addMarker(new MarkerOptions().position(new LatLng(lat,lon)));
+                marker.setTag(pothole);
+            }
+        });
         return true;
     }
 

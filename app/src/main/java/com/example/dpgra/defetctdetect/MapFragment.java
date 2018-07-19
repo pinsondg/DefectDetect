@@ -77,8 +77,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
-        MapsInitializer.initialize(getContext());
+        MapsInitializer.initialize(this.getActivity());
         gmap = googleMap;
         if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
@@ -104,6 +103,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             System.err.print("Could not get location.");
         }
 
+    }
+
+    public void setGmap( GoogleMap gmap ) {
+        if ( gmap != null ) {
+            this.gmap = gmap;
+        }
     }
 
     @Override

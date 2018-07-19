@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
-        bottomNavigationView.setSelectedItemId(R.id.camera);
+        bottomNavigationView.setSelectedItemId(R.id.map);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
             String[] permissions = {Manifest.permission.CAMERA};
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
         //Set default fragment
         FragmentManager manager = getSupportFragmentManager();
-        currentFragment = CameraFragment.getInstance();
+        currentFragment = MapFragment.getInstance();
         manager.beginTransaction().add(R.id.frameholder, currentFragment).commitNow();
 
        // mTextMessage = (TextView) findViewById(R.id.message);
