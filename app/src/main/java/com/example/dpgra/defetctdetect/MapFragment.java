@@ -24,12 +24,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.HashMap;
+
+import model.Pothole;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     private MapView mapView;
     private GoogleMap gmap;
 
+    private HashMap<MarkerOptions, Pothole> pothole_map;
     private static MapFragment mapFragment;
 
     @SuppressLint("ValidFragment")
@@ -177,5 +183,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    public void addToMap(MarkerOptions marker, Pothole pothole) {
+        pothole_map.put(marker, pothole);
     }
 }
