@@ -24,9 +24,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import model.Pothole;
 
@@ -99,6 +104,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     Manifest.permission.ACCESS_COARSE_LOCATION};
 
             ActivityCompat.requestPermissions(this.getActivity(), permissions, 1);
+        }
+        Map<MarkerOptions, Pothole> map = CameraFragment.getInstance().getMarkerOptionsMap();
+        Set<MarkerOptions> options = map.keySet();
+        Iterator<MarkerOptions> i = options.iterator();
+        while ( i.hasNext() ) {
+            MarkerOptions option = i.next();
+            Marker marker = gmap.addMarker(option);
+            marker.setTag(map.get(option));
         }
         LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         gmap.setMyLocationEnabled(true);
