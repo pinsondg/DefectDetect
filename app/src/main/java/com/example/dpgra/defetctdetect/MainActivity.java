@@ -16,11 +16,19 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import java.util.List;
 
 import model.Darknet;
+import model.Pothole;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,31 +96,36 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
         currentFragment = MapFragment.getInstance();
         manager.beginTransaction().add(R.id.frameholder, currentFragment).commitNow();
-
-       // mTextMessage = (TextView) findViewById(R.id.message);
-        //BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation_dashboard);
-        //navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        //mOpenCvCameraView = (CameraBridgeViewBase)findViewById(R.id.CameraView);
-        //mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
-        //mOpenCvCameraView.setCvCameraViewListener(this);
-        /*
-        File fileDir = getFilesDir();
-        System.out.println(fileDir.getAbsolutePath());
-        File cfgFile = null;
-        File weightsFile = null;
-        for ( File file : fileDir.listFiles() ) {
-            if ( file.getName().endsWith(".cfg") ) {
-                cfgFile = file;
-            } else if ( file.getName().endsWith(".weights") ) {
-                weightsFile = file;
-            }
-            System.out.println(file.getAbsolutePath());
-        }
-        if ( cfgFile != null && weightsFile != null ) {
-            net = new Darknet(cfgFile.getAbsolutePath(), weightsFile.getAbsolutePath());
-        }
-        */
     }
 
 
+    @Override
+    protected void onDestroy() {
+        File fileDir = getFilesDir();
+        FileOutputStream stream = null;
+        try {
+            stream = new FileOutputStream(fileDir.getAbsolutePath() + "/hashmap.ser");
+            System.out.println("Saving hash map to " + fileDir.getAbsolutePath() + "/hashmap.ser");
+        } catch (FileNotFoundException e) {
+            System.out.print("Could not create and save file.");
+            return;
+        }
+        ObjectOutputStream outputStream = null;
+        try {
+            outputStream = new ObjectOutputStream(stream);
+            HashMap<MarkerOptions, Pothole> map = (HashMap<MarkerOptions, Pothole>)CameraFragment.getInstance().getMarkerOptionsMap();
+            outputStream.writeObject(map);
+        } catch (IOException e) {
+            System.out.println("Could not save file.");
+
+        }
+        try {
+            outputStream.close();
+            stream.close();
+        } catch (IOException e ) {
+            e.printStackTrace();
+        }
+
+        super.onDestroy();
+    }
 }

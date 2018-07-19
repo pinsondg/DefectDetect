@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +33,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import model.Pothole;
@@ -106,26 +109,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             ActivityCompat.requestPermissions(this.getActivity(), permissions, 1);
         }
         Map<MarkerOptions, Pothole> map = CameraFragment.getInstance().getMarkerOptionsMap();
-        Set<MarkerOptions> options = map.keySet();
-        Iterator<MarkerOptions> i = options.iterator();
-        while ( i.hasNext() ) {
-            MarkerOptions option = i.next();
-            Marker marker = gmap.addMarker(option);
-            marker.setTag(map.get(option));
+        if ( map != null && !map.isEmpty() ) {
+            Set<MarkerOptions> options = map.keySet();
+            Iterator<MarkerOptions> i = options.iterator();
+            while ( i.hasNext() ) {
+                MarkerOptions option = i.next();
+                Marker marker = gmap.addMarker(option);
+                marker.setTag(map.get(option));
+            }
         }
+        ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         gmap.setMyLocationEnabled(true);
-
-        Location loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if ( loc == null ) {
-            loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        } else if ( loc != null ) {
-            LatLng myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
-            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 14.25));
+        Location loc = null;
+        if ( manager.getNetworkInfo(0).getDetailedState() == NetworkInfo.DetailedState.CONNECTED ) {
+            loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         } else {
-            System.err.print("Could not get location.");
+            loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
-
+        LatLng myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
+        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 14.25));
     }
 
     public void setGmap( GoogleMap gmap ) {
@@ -196,9 +199,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onProviderDisabled(String s) {
 
-    }
-
-    public void addToMap(MarkerOptions marker, Pothole pothole) {
-        pothole_map.put(marker, pothole);
     }
 }

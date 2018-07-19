@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,10 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -39,9 +38,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 import model.Darknet;
 import model.Pothole;
@@ -54,7 +55,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     private Darknet net;
     private static CameraFragment cameraFragment;
     private int potholeCount = 0;
-    private Map<MarkerOptions, Pothole> markerOptionsMap;
+    private Map<MarkerOptions, Pothole> markerOptionsMap = new HashMap<MarkerOptions, Pothole>();
 
 
     @SuppressLint("ValidFragment")
@@ -192,13 +193,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         cols = subFrame.cols();
         rows = subFrame.rows();
 
-        System.out.print(frame.height());
-        System.out.print(frame.width());
         if ( net != null ) {
             Mat retMat = net.forwardLoadedNetwork(frame);
             for ( int i = 0; i < retMat.rows(); i++ ) {
                 double confidence = retMat.get(i, 5)[0];
-                if ( confidence > 0.6 ) {
+                if ( confidence > 0.63 ) {
                     printMat(retMat.row(i));
                     System.out.println("YESSSSSS");
                     double xCenter = retMat.get(i, 0)[0]*cols;
@@ -206,7 +205,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     double width = retMat.get(i, 2)[0]*cols;
                     double height = retMat.get(i, 3)[0]*rows;
                     Imgproc.rectangle(subFrame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
-                            , yCenter + height / 2), new Scalar(255, 0, 0), 4);
+                            , yCenter + height / 2), new Scalar(255, 0, 0), 10);
                     Pothole pothole = createPothole();
                     if (placeMarker(pothole)) {
                         System.out.println("Marker placed!");
@@ -247,11 +246,16 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         }
     }
 
-    private boolean placeMarker(final Pothole pothole) {
+    private boolean placeMarker(Pothole pothole) {
         LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         Location location = null;
+        ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         try {
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if ( manager.getNetworkInfo(0).getDetailedState() == NetworkInfo.DetailedState.CONNECTED ) {
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            } else {
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
         } catch (SecurityException e) {
             if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
@@ -264,16 +268,10 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                 ActivityCompat.requestPermissions(this.getActivity(), permissions, 0);
             }
         }
-        final double lat = location.getLatitude();
-        final double lon = location.getLongitude();
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                GoogleMap gmap = MapFragment.getInstance().getGmap();
-                Marker marker = gmap.addMarker(new MarkerOptions().position(new LatLng(lat,lon)));
-                marker.setTag(pothole);
-            }
-        });
+        double lat = location.getLatitude();
+        double lon = location.getLongitude();
+        MarkerOptions option = new MarkerOptions().position(new LatLng(lat,lon));
+        addToMap(option, pothole);
         return true;
     }
 
@@ -312,5 +310,9 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
             Log.i(TAG, "Failed to upload a file");
         }
         return "";
+    }
+
+    public void addToMap(MarkerOptions marker, Pothole pothole) {
+        markerOptionsMap.put(marker, pothole);
     }
 }
