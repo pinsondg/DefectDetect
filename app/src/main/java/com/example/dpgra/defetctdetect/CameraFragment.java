@@ -205,7 +205,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     double width = retMat.get(i, 2)[0]*cols;
                     double height = retMat.get(i, 3)[0]*rows;
                     Imgproc.rectangle(subFrame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
-                            , yCenter + height / 2), new Scalar(255, 0, 0), 10);
+                            , yCenter + height / 2), new Scalar(255, 0, 0), 2);
                     Pothole pothole = createPothole();
                     if (placeMarker(pothole)) {
                         System.out.println("Marker placed!");

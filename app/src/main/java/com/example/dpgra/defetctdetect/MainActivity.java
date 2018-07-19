@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onDestroy() {
+    protected void onPause() {
         File fileDir = getFilesDir();
         FileOutputStream stream = null;
         try {
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             outputStream.writeObject(map);
         } catch (IOException e) {
             System.out.println("Could not save file.");
-
+            e.printStackTrace();
         }
         try {
             outputStream.close();
@@ -126,6 +126,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        super.onDestroy();
+        super.onPause();
     }
 }

@@ -17,7 +17,8 @@ public class Pothole implements Serializable {
     public static final int MEDIUM_POTHOLE = 1;
     public static final int LARGE_POTHOLE = 2;
 
-    private Location location;
+    private double lon;
+    private double lat;
     private String id;
     private int size;
 
@@ -30,7 +31,15 @@ public class Pothole implements Serializable {
      * @param size the size of the pothole - Use the static finals of this class to get the sizes
      */
     public Pothole( Location location, String id, int size ) {
-        this.location = location;
+        this.lon = location.getLongitude();
+        this.lat = location.getLatitude();
+        this.id = id;
+        this.size = size;
+    }
+
+    public  Pothole( double longitude, double latitude, String id, int size ) {
+        this.lat = latitude;
+        this.lon = longitude;
         this.id = id;
         this.size = size;
     }
@@ -45,15 +54,13 @@ public class Pothole implements Serializable {
         return size;
     }
 
-    /**
-     * Gets the location of the pothole
-     *
-     * @return the location of the pothole
-     */
-    public Location getLocation() {
-        return location;
+    public double getLat() {
+        return lat;
     }
 
+    public double getLon() {
+        return lon;
+    }
 
     /**
      * Gets the Id of the pothole.
