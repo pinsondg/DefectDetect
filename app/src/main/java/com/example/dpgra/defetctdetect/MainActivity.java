@@ -20,15 +20,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.List;
 
 import model.Darknet;
 import model.Pothole;
+import model.PotholeList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        readInData();
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(R.id.map);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -104,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
         File fileDir = getFilesDir();
         FileOutputStream stream = null;
         try {
-            stream = new FileOutputStream(fileDir.getAbsolutePath() + "/hashmap.ser");
-            System.out.println("Saving hash map to " + fileDir.getAbsolutePath() + "/hashmap.ser");
+            stream = new FileOutputStream(fileDir.getAbsolutePath() + "/pothole_list.ser");
+            System.out.println("Saving hash map to " + fileDir.getAbsolutePath() + "/pothole_list.ser");
         } catch (FileNotFoundException e) {
             System.out.print("Could not create and save file.");
             return;
@@ -113,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
         ObjectOutputStream outputStream = null;
         try {
             outputStream = new ObjectOutputStream(stream);
-            HashMap<MarkerOptions, Pothole> map = (HashMap<MarkerOptions, Pothole>)CameraFragment.getInstance().getMarkerOptionsMap();
-            outputStream.writeObject(map);
+            PotholeList list = PotholeList.getInstance();
+            outputStream.writeObject(list);
         } catch (IOException e) {
             System.out.println("Could not save file.");
             e.printStackTrace();
@@ -127,5 +131,33 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onPause();
+    }
+
+    private boolean readInData() {
+        File fileDir = getFilesDir();
+        File readFile = null;
+        for ( File file : fileDir.listFiles() ) {
+            if ( file.getName().equals("pothole_list.ser")) {
+                readFile = file;
+                break;
+            }
+        }
+        FileInputStream inStream;
+        try {
+            inStream = new FileInputStream(readFile);
+        } catch (FileNotFoundException e ) {
+            System.out.print("File not found!");
+            return false;
+        }
+        ObjectInputStream obInStream;
+        try {
+            obInStream = new ObjectInputStream(inStream);
+            PotholeList list = (PotholeList) obInStream.readObject();
+            PotholeList.getInstance().overwrite(list);
+            return true;
+        } catch ( IOException | ClassNotFoundException e ) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

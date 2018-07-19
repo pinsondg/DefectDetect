@@ -71,9 +71,18 @@ public class Pothole implements Serializable {
         return id;
     }
 
-    /**
-     * Gets the street the pothole is on.
-     * @return
-     */
+    @Override
+    public boolean equals(Object o) {
+        if ( o instanceof Pothole ) {
+            double oLat = ((Pothole) o).getLat();
+            double oLon = ((Pothole) o).getLon();
+            int oSize = ((Pothole) o).getSize();
+
+            if ( oLat == lat && oLon == lon && oSize == size ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

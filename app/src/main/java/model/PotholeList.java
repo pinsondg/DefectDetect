@@ -1,6 +1,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A list of potholes. Uses the singleton design structure so the list can be accessed easily
@@ -21,5 +23,13 @@ public class PotholeList extends ArrayList<Pothole> {
         return potholeList;
     }
 
+
+    public void overwrite( List<Pothole> list ) {
+        this.clear();
+        Iterator<Pothole> i = list.iterator();
+        while (i.hasNext()) {
+            this.add(i.next());
+        }
+    }
 
 }
