@@ -46,6 +46,7 @@ import java.util.Random;
 
 import model.Darknet;
 import model.Pothole;
+import model.PotholeList;
 
 import static org.opencv.android.BaseLoaderCallback.TAG;
 
@@ -55,17 +56,18 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     private Darknet net;
     private static CameraFragment cameraFragment;
     private int potholeCount = 0;
-    private Map<MarkerOptions, Pothole> markerOptionsMap = new HashMap<MarkerOptions, Pothole>();
+    private PotholeList potholeList;
+
 
 
     @SuppressLint("ValidFragment")
     private CameraFragment() {
         super();
-
+        potholeList = potholeList.getInstance();
     }
 
-    public Map<MarkerOptions, Pothole> getMarkerOptionsMap() {
-        return markerOptionsMap;
+    public PotholeList getPotholeList() {
+        return potholeList;
     }
 
     public static CameraFragment getInstance() {
@@ -271,7 +273,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         double lat = location.getLatitude();
         double lon = location.getLongitude();
         MarkerOptions option = new MarkerOptions().position(new LatLng(lat,lon));
-        addToMap(option, pothole);
+        addToPotholeList(pothole);
         return true;
     }
 
@@ -312,7 +314,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         return "";
     }
 
-    public void addToMap(MarkerOptions marker, Pothole pothole) {
-        markerOptionsMap.put(marker, pothole);
+    public void addToPotholeList(Pothole pothole) {
+        potholeList.add(pothole);
     }
 }

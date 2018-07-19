@@ -37,6 +37,7 @@ import java.util.Random;
 import java.util.Set;
 
 import model.Pothole;
+import model.PotholeList;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
@@ -108,14 +109,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
             ActivityCompat.requestPermissions(this.getActivity(), permissions, 1);
         }
-        Map<MarkerOptions, Pothole> map = CameraFragment.getInstance().getMarkerOptionsMap();
-        if ( map != null && !map.isEmpty() ) {
-            Set<MarkerOptions> options = map.keySet();
-            Iterator<MarkerOptions> i = options.iterator();
+        PotholeList potholeList = CameraFragment.getInstance().getPotholeList();
+        if (  potholeList != null && !potholeList.isEmpty() ) {
+            Iterator<Pothole> i = potholeList.iterator();
             while ( i.hasNext() ) {
-                MarkerOptions option = i.next();
+                Pothole temp_pothole;
+                //Assigns pothole and then increments iterator
+                temp_pothole = i.next();
+                MarkerOptions option = new MarkerOptions().position(new LatLng(temp_pothole.getLat(),temp_pothole.getLon()));
                 Marker marker = gmap.addMarker(option);
-                marker.setTag(map.get(option));
+                marker.setTag(temp_pothole);
             }
         }
         ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -21,4 +21,5 @@ public class PotholeList extends ArrayList<Pothole> {
         return potholeList;
     }
 
+
 }
