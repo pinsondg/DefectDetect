@@ -54,7 +54,7 @@ public class Darknet {
 	}
 	
 	public Mat forwardLoadedNetwork( Mat image ) {
-		Imgproc.cvtColor(image, image, Imgproc.COLOR_RGBA2RGB);
+
 		image = Dnn.blobFromImage(image, .003922, new Size(448, 448),
 			new Scalar(0,0,0) , false, false);
 		long time1 = System.nanoTime();

@@ -177,10 +177,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
      */
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        Mat frame = inputFrame.rgba();
-        Mat mRgbaT = frame.t();
-        Core.flip(frame.t(), mRgbaT, 1);
-        Imgproc.resize(mRgbaT, mRgbaT, frame.size());
+        Mat mRgbaT = inputFrame.rgba();
+        Imgproc.cvtColor(mRgbaT, mRgbaT, Imgproc.COLOR_RGBA2RGB);
+        //Mat mRgbaT = frame.t();
+        //Core.flip(frame.t(), mRgbaT, 1);
+        //Imgproc.resize(mRgbaT, mRgbaT, frame.size());
 
         int cols = mRgbaT.cols();
         int rows = mRgbaT.rows();
@@ -210,18 +211,8 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     double width = retMat.get(i, 2)[0]*cols;
                     double height = retMat.get(i, 3)[0]*rows;
                     Imgproc.rectangle(subFrame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
-                            , yCenter + height / 2), new Scalar(255, 0, 0), 2);
-                    Runnable r = new Runnable() {
-
-                        @Override
-                        public void run() {
-                            Pothole pothole = createPothole();
-                            if (placeMarker(pothole)) {
-                                System.out.println("Marker placed!");
-                            }
-                        }
-                    };
-                    r.run();
+                            , yCenter + height / 2), new Scalar(255, 0, 0), 10);
+                    Pothole pothole = createPothole();
                 }
             }
         } else {
@@ -235,6 +226,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         Pothole pothole = null;
         if ( location != null ) {
             pothole = new Pothole( location, createPotholeId(), Pothole.SMALL_POTHOLE);
+            addToPotholeList(pothole);
         }
         return pothole;
     }
@@ -260,26 +252,6 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         }
     }
 
-    /**
-     * Places a marker in a list to be read by the map.
-     *
-     * @param pothole the pothole to be placed in the marker
-     * @return true if the marker could be placed, false if otherwise
-     */
-    private boolean placeMarker(Pothole pothole) {
-        Location location = getLocation();
-        if ( location != null ) {
-            double lat = location.getLatitude();
-            double lon = location.getLongitude();
-            MarkerOptions option = new MarkerOptions().position(new LatLng(lat,lon));
-            addToPotholeList(pothole);
-            return true;
-        } else {
-            return false;
-        }
-
-
-    }
 
     @Nullable
     private Location getLocation() {

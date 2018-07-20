@@ -98,7 +98,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         MapsInitializer.initialize(this.getActivity());
         System.out.println("ON MAP READY!");
         gmap = googleMap;
-
+        gmap.setOnMarkerClickListener(new MapClickListener(getActivity()));
         if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this.getActivity(),

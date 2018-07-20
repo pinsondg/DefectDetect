@@ -37,7 +37,7 @@ public class Pothole implements Serializable {
         this.size = size;
     }
 
-    public  Pothole( double longitude, double latitude, String id, int size ) {
+    public Pothole( double longitude, double latitude, String id, int size ) {
         this.lat = latitude;
         this.lon = longitude;
         this.id = id;
