@@ -27,6 +27,7 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -177,10 +178,12 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat frame = inputFrame.rgba();
-        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2RGB);
+        Mat mRgbaT = frame.t();
+        Core.flip(frame.t(), mRgbaT, 1);
+        Imgproc.resize(mRgbaT, mRgbaT, frame.size());
 
-        int cols = frame.cols();
-        int rows = frame.rows();
+        int cols = mRgbaT.cols();
+        int rows = mRgbaT.rows();
         Size cropSize;
         if ((float)cols / rows > 1) {
             cropSize = new Size(rows * 1, rows);
@@ -191,12 +194,12 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         int y2 = (int)(y1 + cropSize.height);
         int x1 = (int)(cols - cropSize.width) / 2;
         int x2 = (int)(x1 + cropSize.width);
-        Mat subFrame = frame.submat(y1, y2, x1, x2);
+        Mat subFrame = mRgbaT.submat(y1, y2, x1, x2);
         cols = subFrame.cols();
         rows = subFrame.rows();
 
         if ( net != null ) {
-            Mat retMat = net.forwardLoadedNetwork(frame);
+            Mat retMat = net.forwardLoadedNetwork(mRgbaT);
             for ( int i = 0; i < retMat.rows(); i++ ) {
                 double confidence = retMat.get(i, 5)[0];
                 if ( confidence > 0.63 ) {
@@ -208,22 +211,31 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     double height = retMat.get(i, 3)[0]*rows;
                     Imgproc.rectangle(subFrame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
                             , yCenter + height / 2), new Scalar(255, 0, 0), 2);
-                    Pothole pothole = createPothole();
-                    if (placeMarker(pothole)) {
-                        System.out.println("Marker placed!");
-                    }
+                    Runnable r = new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Pothole pothole = createPothole();
+                            if (placeMarker(pothole)) {
+                                System.out.println("Marker placed!");
+                            }
+                        }
+                    };
+                    r.run();
                 }
             }
         } else {
             Log.i("System", "Problem forwarding network");
         }
-        return frame;
+        return mRgbaT;
     }
 
     private Pothole createPothole() {
-        LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
-        @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        Pothole pothole = new Pothole( location, createPotholeId(), Pothole.SMALL_POTHOLE);
+        Location location = getLocation();
+        Pothole pothole = null;
+        if ( location != null ) {
+            pothole = new Pothole( location, createPotholeId(), Pothole.SMALL_POTHOLE);
+        }
         return pothole;
     }
 
@@ -248,7 +260,29 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         }
     }
 
+    /**
+     * Places a marker in a list to be read by the map.
+     *
+     * @param pothole the pothole to be placed in the marker
+     * @return true if the marker could be placed, false if otherwise
+     */
     private boolean placeMarker(Pothole pothole) {
+        Location location = getLocation();
+        if ( location != null ) {
+            double lat = location.getLatitude();
+            double lon = location.getLongitude();
+            MarkerOptions option = new MarkerOptions().position(new LatLng(lat,lon));
+            addToPotholeList(pothole);
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
+    @Nullable
+    private Location getLocation() {
         LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         Location location = null;
         ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -270,11 +304,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                 ActivityCompat.requestPermissions(this.getActivity(), permissions, 0);
             }
         }
-        double lat = location.getLatitude();
-        double lon = location.getLongitude();
-        MarkerOptions option = new MarkerOptions().position(new LatLng(lat,lon));
-        addToPotholeList(pothole);
-        return true;
+        return location;
     }
 
     @Override

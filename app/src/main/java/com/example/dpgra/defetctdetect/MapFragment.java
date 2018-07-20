@@ -107,7 +107,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION};
 
-            ActivityCompat.requestPermissions(this.getActivity(), permissions, 1);
+            ActivityCompat.requestPermissions(this.getActivity(), permissions, 0);
         }
         PotholeList potholeList = CameraFragment.getInstance().getPotholeList();
         if (  potholeList != null && !potholeList.isEmpty() ) {
@@ -130,8 +130,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         } else {
             loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
-        LatLng myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
-        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 14.25));
+        if ( loc != null ) {
+            LatLng myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 14.25));
+        }
     }
 
     public void setGmap( GoogleMap gmap ) {

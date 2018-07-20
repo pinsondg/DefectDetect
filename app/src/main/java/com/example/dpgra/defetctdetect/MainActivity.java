@@ -33,6 +33,9 @@ import model.Darknet;
 import model.Pothole;
 import model.PotholeList;
 
+/**
+ * The main activity of the android app.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private Darknet net;
@@ -133,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    /**
+     * Reads in the data for the app.
+     *
+     * @return true if data could be read in, false if otherwise
+     */
     private boolean readInData() {
         File fileDir = getFilesDir();
         File readFile = null;
@@ -142,14 +150,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
-        FileInputStream inStream;
+        FileInputStream inStream = null;
         try {
             inStream = new FileInputStream(readFile);
-        } catch (FileNotFoundException e ) {
+        } catch (FileNotFoundException | NullPointerException e) {
             System.out.print("File not found!");
             return false;
         }
-        ObjectInputStream obInStream;
+        ObjectInputStream obInStream = null;
         try {
             obInStream = new ObjectInputStream(inStream);
             PotholeList list = (PotholeList) obInStream.readObject();

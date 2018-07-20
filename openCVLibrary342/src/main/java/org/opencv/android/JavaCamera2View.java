@@ -1,10 +1,12 @@
 package org.opencv.android;
 
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Camera;
 import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
