@@ -210,4 +210,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void onProviderDisabled(String s) {
 
     }
+
+    public int getItemId() {
+        return R.id.map;
+    }
 }

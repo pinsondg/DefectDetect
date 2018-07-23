@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private List<Fragment> fragList;
     private Fragment currentFragment;
+    private MenuItem currentMenuItem;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -48,34 +49,39 @@ public class MainActivity extends AppCompatActivity {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Fragment fragment = null;
-            transaction.remove(currentFragment);
-            switch (item.getItemId()) {
-                case R.id.camera:
-                    System.out.println("Selected camera");
-                    fragment = CameraFragment.getInstance();
-                    transaction.add(R.id.frameholder, fragment);
-                    currentFragment = fragment;
-                    //transaction.addToBackStack(null);
-                    transaction.commit();
-                    return true;
-                case R.id.map:
-                    System.out.println("Selected map");
-                    fragment = MapFragment.getInstance();
-                    transaction.add(R.id.frameholder, fragment);
-                    currentFragment = fragment;
-                    //transaction.addToBackStack(null);
-                    //transaction.setTransition(1);
-                    transaction.commit();
-                    return true;
-                case R.id.list:
-                    System.out.println("Selected list");
-                    fragment = new PotholeListFragment();
-                    transaction.add(R.id.frameholder, fragment);
-                    currentFragment = fragment;
-                    //transaction.addToBackStack(null);
-                    transaction.commit();
-                    return true;
+            if ( currentMenuItem.getItemId() != item.getItemId() ) {
+                transaction.remove(currentFragment);
+                switch (item.getItemId()) {
+                    case R.id.camera:
+                        System.out.println("Selected camera");
+                        fragment = CameraFragment.getInstance();
+                        transaction.add(R.id.frameholder, fragment);
+                        currentFragment = fragment;
+                        //transaction.addToBackStack(null);
+                        transaction.commit();
+                        currentMenuItem = item;
+                        return true;
+                    case R.id.map:
+                        System.out.println("Selected map");
+                        fragment = MapFragment.getInstance();
+                        transaction.add(R.id.frameholder, fragment);
+                        currentFragment = fragment;
+                        //transaction.addToBackStack(null);
+                        transaction.commit();
+                        currentMenuItem = item;
+                        return true;
+                    case R.id.list:
+                        System.out.println("Selected list");
+                        fragment = new PotholeListFragment();
+                        transaction.add(R.id.frameholder, fragment);
+                        currentFragment = fragment;
+                        //transaction.addToBackStack(null);
+                        currentMenuItem = item;
+                        transaction.commit();
+                        return true;
+                }
             }
+
             return false;
         }
     };
@@ -89,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(R.id.map);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        currentMenuItem = bottomNavigationView.getMenu().findItem(R.id.map);
         if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ) {
             String[] permissions = {Manifest.permission.CAMERA};
             ActivityCompat.requestPermissions(this, permissions, 1);

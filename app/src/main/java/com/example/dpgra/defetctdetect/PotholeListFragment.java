@@ -51,8 +51,15 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 PotholeList.getInstance().clear();
-                rootView.refreshDrawableState();
+                ListView listView = rootView.findViewById(R.id.list_view);
+                PotholeListAdapter adapter = (PotholeListAdapter) listView.getAdapter();
+                adapter.clear();
+                adapter.notifyDataSetChanged();
             }
         }).setNegativeButton("No", null).show();
+    }
+
+    public int getItemId() {
+        return R.id.list;
     }
 }
