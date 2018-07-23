@@ -95,45 +95,50 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        MapsInitializer.initialize(this.getActivity());
-        System.out.println("ON MAP READY!");
-        gmap = googleMap;
-        gmap.setOnMarkerClickListener(new MapClickListener(getActivity()));
-        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this.getActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        try {
+            MapsInitializer.initialize(this.getActivity());
+            System.out.println("ON MAP READY!");
+            gmap = googleMap;
+            gmap.setOnMarkerClickListener(new MapClickListener(getActivity()));
+            PotholeList potholeList = CameraFragment.getInstance().getPotholeList();
+            if (  potholeList != null && !potholeList.isEmpty() ) {
+                Iterator<Pothole> i = potholeList.iterator();
+                while ( i.hasNext() ) {
+                    Pothole temp_pothole;
+                    //Assigns pothole and then increments iterator
+                    temp_pothole = i.next();
+                    MarkerOptions option = new MarkerOptions().position(new LatLng(temp_pothole.getLat(),temp_pothole.getLon()));
+                    Marker marker = gmap.addMarker(option);
+                    marker.setTag(temp_pothole);
+                }
+            }
+            ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+            gmap.setMyLocationEnabled(true);
+            Location loc = null;
+            if ( manager.getNetworkInfo(0).getDetailedState() == NetworkInfo.DetailedState.CONNECTED ) {
+                loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            } else {
+                loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
+            if ( loc != null ) {
+                LatLng myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
+                gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 14.25));
+            }
 
-            String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION};
+        } catch(SecurityException e) {
+            if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this.getActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(this.getActivity(), permissions, 0);
-        }
-        PotholeList potholeList = CameraFragment.getInstance().getPotholeList();
-        if (  potholeList != null && !potholeList.isEmpty() ) {
-            Iterator<Pothole> i = potholeList.iterator();
-            while ( i.hasNext() ) {
-                Pothole temp_pothole;
-                //Assigns pothole and then increments iterator
-                temp_pothole = i.next();
-                MarkerOptions option = new MarkerOptions().position(new LatLng(temp_pothole.getLat(),temp_pothole.getLon()));
-                Marker marker = gmap.addMarker(option);
-                marker.setTag(temp_pothole);
+                String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION};
+
+                ActivityCompat.requestPermissions(this.getActivity(), permissions, 0);
             }
         }
-        ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
-        gmap.setMyLocationEnabled(true);
-        Location loc = null;
-        if ( manager.getNetworkInfo(0).getDetailedState() == NetworkInfo.DetailedState.CONNECTED ) {
-            loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        } else {
-            loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        }
-        if ( loc != null ) {
-            LatLng myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
-            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 14.25));
-        }
+
     }
 
     public void setGmap( GoogleMap gmap ) {

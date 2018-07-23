@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -259,7 +260,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         Location location = null;
         ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         try {
-            if ( manager.getNetworkInfo(0).getDetailedState() == NetworkInfo.DetailedState.CONNECTED ) {
+            if (manager.getNetworkInfo(0).getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
                 location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             } else {
                 location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -282,12 +283,16 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public void onResume() {
         super.onResume();
-        if (!OpenCVLoader.initDebug()) {
-            Log.d("Debug", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this.getActivity(), mLoaderCallback);
-        } else {
-            Log.d("Debug", "OpenCV library found inside package. Using it!");
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        try {
+            if (!OpenCVLoader.initDebug()) {
+                Log.d("Debug", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+                OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this.getActivity(), mLoaderCallback);
+            } else {
+                Log.d("Debug", "OpenCV library found inside package. Using it!");
+                mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+            }
+        } catch(NullPointerException e) {
+            Toast.makeText(this.getActivity(), "OpenCV is required to run this feature. Please install OpenCV from the Google Play Store or download the APK from their official website.", Toast.LENGTH_LONG).show();
         }
     }
 
