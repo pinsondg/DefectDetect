@@ -57,7 +57,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     private CameraBridgeViewBase mOpenCvCameraView;
     private Darknet net;
     private static CameraFragment cameraFragment;
-    private int potholeCount = 0;
+    private int potholeCount = 1;
     private PotholeList potholeList;
 
 
@@ -233,6 +233,9 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     }
 
     private String createPotholeId() {
+        if ( PotholeList.getInstance().isEmpty() ) {
+            potholeCount = 0;
+        }
         String retId = "p" + potholeCount;
         potholeCount++;
         return retId;

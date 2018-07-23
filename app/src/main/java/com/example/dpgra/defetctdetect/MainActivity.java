@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                         transaction.add(R.id.frameholder, fragment);
                         currentFragment = fragment;
                         //transaction.addToBackStack(null);
-                        transaction.commit();
+                        transaction.commitNow();
                         currentMenuItem = item;
                         return true;
                     case R.id.map:
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                         transaction.add(R.id.frameholder, fragment);
                         currentFragment = fragment;
                         //transaction.addToBackStack(null);
-                        transaction.commit();
+                        transaction.commitNow();
                         currentMenuItem = item;
                         return true;
                     case R.id.list:
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                         currentFragment = fragment;
                         //transaction.addToBackStack(null);
                         currentMenuItem = item;
-                        transaction.commit();
+                        transaction.commitNow();
                         return true;
                 }
             }
@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
         currentFragment = MapFragment.getInstance();
         manager.beginTransaction().add(R.id.frameholder, currentFragment).commitNow();
+        //setToMapView();
     }
 
 
@@ -175,5 +176,9 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public void setToMapView() {
+        bottomNavigationView.setSelectedItemId(R.id.map);
     }
 }

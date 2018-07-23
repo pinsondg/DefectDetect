@@ -43,6 +43,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     private MapView mapView;
     private GoogleMap gmap;
+    private LatLng customLocation;
 
     private HashMap<MarkerOptions, Pothole> pothole_map;
     private static MapFragment mapFragment;
@@ -121,9 +122,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             } else {
                 loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
-            if ( loc != null ) {
-                LatLng myLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
-                gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, (float) 14.25));
+            if ( loc != null && customLocation == null) {
+                moveToLocation(loc.getLatitude(), loc.getLongitude());
+            } else {
+                moveToLocation( customLocation.latitude, customLocation.longitude );
             }
 
         } catch(SecurityException e) {
@@ -138,13 +140,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 ActivityCompat.requestPermissions(this.getActivity(), permissions, 0);
             }
         }
+        customLocation = null;
 
     }
 
-    public void setGmap( GoogleMap gmap ) {
-        if ( gmap != null ) {
-            this.gmap = gmap;
-        }
+    public void setCustomLocation( LatLng latlng ) {
+        customLocation = latlng;
+    }
+
+    public void moveToLocation( double lat, double lng ) {
+        LatLng location = new LatLng(lat, lng);
+        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, (float) 14.25));
     }
 
     @Override
@@ -209,9 +215,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onProviderDisabled(String s) {
 
-    }
-
-    public int getItemId() {
-        return R.id.map;
     }
 }

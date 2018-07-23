@@ -38,28 +38,26 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
 
     private void createList() {
         ListView listView = (ListView) rootView.findViewById(R.id.list_view);
-        listView.setAdapter( new PotholeListAdapter(this.getActivity(), PotholeList.getInstance()));
+        listView.setAdapter( new PotholeListAdapter(this.getActivity(), PotholeList.getInstance(), this));
     }
 
     @Override
     public void onClick(View view) {
-        new AlertDialog.Builder(this.getContext())
-                .setTitle("Alert")
-                .setMessage("Do you want to clear the list?")
-                .setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                PotholeList.getInstance().clear();
-                ListView listView = rootView.findViewById(R.id.list_view);
-                PotholeListAdapter adapter = (PotholeListAdapter) listView.getAdapter();
-                adapter.clear();
-                adapter.notifyDataSetChanged();
-            }
-        }).setNegativeButton("No", null).show();
-    }
-
-    public int getItemId() {
-        return R.id.list;
+        if ( view.getId() == rootView.findViewById(R.id.floatingActionButton).getId() ) {
+            new AlertDialog.Builder(this.getContext())
+                    .setTitle("Alert")
+                    .setMessage("Do you want to clear the list?")
+                    .setPositiveButton("Yes",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    PotholeList.getInstance().clear();
+                                    ListView listView = rootView.findViewById(R.id.list_view);
+                                    PotholeListAdapter adapter = (PotholeListAdapter) listView.getAdapter();
+                                    adapter.clear();
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }).setNegativeButton("No", null).show();
+        }
     }
 }
