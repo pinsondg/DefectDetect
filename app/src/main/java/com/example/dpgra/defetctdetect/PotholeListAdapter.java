@@ -32,10 +32,12 @@ public class PotholeListAdapter extends ArrayAdapter<Pothole> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.pothole, parent, false);
         }
         // Lookup view for data population
+        TextView header = (TextView) convertView.findViewById(R.id.pothole_id);
         TextView coords = (TextView) convertView.findViewById(R.id.coords);
         TextView severity = (TextView) convertView.findViewById(R.id.severity);
         // Populate the data into the template view using the data object
-        coords.setText("Coordinates: " + pothole.getLat() + ", " + pothole.getLon());
+        header.setText(pothole.getId());
+        coords.setText("Coordinates: " + String.format("%.4f", pothole.getLat()) + ", " + String.format("%.4f", pothole.getLon()));
         severity.setText("Severity: " + pothole.getSize());
         // Return the completed view to render on screen
         return convertView;

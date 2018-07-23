@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="horizontal"
+    android:layout_height="55dp">
 
     <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Header"
+        android:layout_weight="1"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:paddingLeft="20dp"
+        android:textSize="16sp"
         android:id="@+id/pothole_id"/>
     <TextView
         android:layout_width="wrap_content"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:id="@+id/coords"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingRight="20dp"
         android:id="@+id/severity"/>
 
 </LinearLayout>
