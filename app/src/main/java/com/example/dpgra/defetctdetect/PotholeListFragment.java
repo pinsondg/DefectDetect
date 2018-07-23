@@ -13,12 +13,26 @@ import model.PotholeList;
 
 public class PotholeListFragment extends Fragment {
 
+    View rootView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.list_fragment, container, false);
-        ListView listView = (ListView) rootView.findViewById(R.id.list_view);
-        listView.setAdapter( new PotholeListAdapter(this.getActivity(), PotholeList.getInstance()));
+        rootView = inflater.inflate(R.layout.list_fragment, container, false);
+        createList();
         return rootView;
     }
+
+    @Override
+    public void onResume() {
+        createList();
+        super.onResume();
+
+    }
+
+    private void createList() {
+        ListView listView = (ListView) rootView.findViewById(R.id.list_view);
+        listView.setAdapter( new PotholeListAdapter(this.getActivity(), PotholeList.getInstance()));
+    }
+
 }
