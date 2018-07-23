@@ -16,6 +16,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 import model.Darknet;
@@ -114,9 +116,13 @@ public class MainActivity extends AppCompatActivity {
         }
         ObjectOutputStream outputStream = null;
         try {
+
             outputStream = new ObjectOutputStream(stream);
             PotholeList list = PotholeList.getInstance();
             outputStream.writeObject(list);
+            //BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream));
+            //writer.write("");
+            //writer.close();
         } catch (IOException e) {
             System.out.println("Could not save file.");
             e.printStackTrace();

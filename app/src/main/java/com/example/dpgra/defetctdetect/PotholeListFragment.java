@@ -1,7 +1,10 @@
 package com.example.dpgra.defetctdetect;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -11,15 +14,18 @@ import android.widget.ListView;
 
 import model.PotholeList;
 
-public class PotholeListFragment extends Fragment {
+public class PotholeListFragment extends Fragment implements View.OnClickListener {
 
-    View rootView;
+    private View rootView;
+    private FloatingActionButton clearButton;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.list_fragment, container, false);
         createList();
+        clearButton = rootView.findViewById(R.id.floatingActionButton);
+        clearButton.setOnClickListener(this);
         return rootView;
     }
 
@@ -35,4 +41,18 @@ public class PotholeListFragment extends Fragment {
         listView.setAdapter( new PotholeListAdapter(this.getActivity(), PotholeList.getInstance()));
     }
 
+    @Override
+    public void onClick(View view) {
+        new AlertDialog.Builder(this.getContext())
+                .setTitle("Alert")
+                .setMessage("Do you want to clear the list?")
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                PotholeList.getInstance().clear();
+                rootView.refreshDrawableState();
+            }
+        }).setNegativeButton("No", null).show();
+    }
 }
