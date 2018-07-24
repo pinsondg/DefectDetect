@@ -57,7 +57,6 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     private CameraBridgeViewBase mOpenCvCameraView;
     private Darknet net;
     private static CameraFragment cameraFragment;
-    private int potholeCount = 1;
     private PotholeList potholeList;
 
 
@@ -127,29 +126,6 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public void onCameraViewStarted(int width, int height) {
         AssetManager assetManager = getResources().getAssets();
-        /*
-        String[] fileDir = {};
-        try {
-            fileDir = assetManager.list("debug");
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(Arrays.toString(fileDir));
-        File cfgFile = null;
-        File weightsFile = null;
-        for ( String file : fileDir) {
-            if ( file.endsWith(".cfg") ) {
-                cfgFile = new File(file);
-            } else if ( file.endsWith(".weights") ) {
-                weightsFile = new File(file);
-            }
-        }
-        System.out.println(cfgFile.getAbsolutePath());
-        System.out.println(weightsFile.getAbsolutePath());
-        */
-
         String cfgFile = getPath("yolov2-tiny2.cfg", this.getActivity());
         String weightsFile = getPath("yolov2-tiny2_36500.weights", this.getActivity());
 
@@ -233,11 +209,13 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     }
 
     private String createPotholeId() {
-        if ( PotholeList.getInstance().isEmpty() ) {
-            potholeCount = 0;
+        PotholeList list = PotholeList.getInstance();
+        int num = 0;
+        if ( list.isEmpty() ) {
+            String lastId = list.get(list.size() - 1).getId();
+            num = Integer.parseInt(lastId.substring(1));
         }
-        String retId = "p" + potholeCount;
-        potholeCount++;
+        String retId = "p" + (num + 1);
         return retId;
     }
 

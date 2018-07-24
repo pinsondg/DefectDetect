@@ -44,7 +44,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private MapView mapView;
     private GoogleMap gmap;
     private LatLng customLocation;
-
     private HashMap<MarkerOptions, Pothole> pothole_map;
     private static MapFragment mapFragment;
 

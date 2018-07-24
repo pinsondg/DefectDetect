@@ -128,9 +128,6 @@ public class MainActivity extends AppCompatActivity {
             outputStream = new ObjectOutputStream(stream);
             PotholeList list = PotholeList.getInstance();
             outputStream.writeObject(list);
-            //BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream));
-            //writer.write("");
-            //writer.close();
         } catch (IOException e) {
             System.out.println("Could not save file.");
             e.printStackTrace();
