@@ -1,13 +1,11 @@
-package com.example.dpgra.defetctdetect;
+package com.example.dpgra.defectdetect;
 
 import android.database.DataSetObserver;
 import android.support.animation.DynamicAnimation;
 import android.support.animation.SpringAnimation;
 import android.support.v4.app.Fragment;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -69,6 +67,7 @@ public class SlidingSpringAnimation extends DataSetObserver implements View.OnTo
             }
         }
         else {
+            if ( motionEvent.getAction() == MotionEvent.ACTION_UP )
             sendBack( view );
         }
         return true;

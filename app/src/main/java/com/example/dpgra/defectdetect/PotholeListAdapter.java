@@ -1,4 +1,4 @@
-package com.example.dpgra.defetctdetect;
+package com.example.dpgra.defectdetect;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;

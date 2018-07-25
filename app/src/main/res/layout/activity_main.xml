@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
-    tools:context="com.example.dpgra.defetctdetect.MainActivity">
+    tools:context="com.example.dpgra.defectdetect.MainActivity">
 
     <FrameLayout
         android:id="@+id/frameholder"
@@ -17,22 +17,22 @@
     <!---
     <fragment
         android:id="@+id/cameraFrag"
-        android:name="com.example.dpgra.defetctdetect.CameraFragment"
-        class="com.example.dpgra.defetctdetect.CameraFragment"
+        android:name="defectdetectCameraFragment"
+        class="defectdetectCameraFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <fragment
         android:id="@+id/mapFrag"
-        android:name="com.example.dpgra.defetctdetect.MapFragment"
-        class="com.example.dpgra.defetctdetect.MapFragment"
+        android:name="defectdetectMapFragment"
+        class="defectdetectMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <fragment
         android:id="@+id/listFrag"
-        android:name="com.example.dpgra.defetctdetect.PotholeListFragment"
-        class="com.example.dpgra.defetctdetect.PotholeListFragment"
+        android:name="defectdetectPotholeListFragment"
+        class="defectdetectPotholeListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
         -->
