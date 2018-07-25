@@ -2,7 +2,9 @@ package com.example.dpgra.defectdetect;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.location.Location;
@@ -20,12 +22,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -55,13 +59,14 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     private Darknet net;
     private static CameraFragment cameraFragment;
     private PotholeList potholeList;
-
+    private Integer OrientationIsValid;
 
 
     @SuppressLint("ValidFragment")
     private CameraFragment() {
         super();
         potholeList = potholeList.getInstance();
+        OrientationIsValid = 2;
     }
 
     /**
@@ -126,6 +131,25 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
      */
     @Override
     public void onCameraViewStarted(int width, int height) {
+
+        if(OrientationIsValid == 2) {
+            new AlertDialog.Builder(this.getContext())
+                    .setTitle("Alert")
+                    .setMessage("Do you want to keep this orientation?")
+                    .setPositiveButton("Yes",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    OrientationIsValid = 0;
+                                }
+                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    OrientationIsValid = 1;
+                }
+            }).show();
+        }
+
         AssetManager assetManager = getResources().getAssets();
         String cfgFile = getPath("yolov2-tiny2.cfg", this.getActivity());
         String weightsFile = getPath("yolov2-tiny2_36500.weights", this.getActivity());
@@ -155,11 +179,14 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
      */
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        Mat mRgbaT = inputFrame.rgba();
-        Imgproc.cvtColor(mRgbaT, mRgbaT, Imgproc.COLOR_RGBA2RGB);
-        //Mat mRgbaT = frame.t();
-        //Core.flip(frame.t(), mRgbaT, 1);
-        //Imgproc.resize(mRgbaT, mRgbaT, frame.size());
+        Mat frame = inputFrame.rgba();
+        Mat mRgbaT = frame;
+        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2RGB);
+        if(OrientationIsValid == 1) {
+            mRgbaT = frame.t();
+            Core.flip(frame.t(), mRgbaT, 1);
+            Imgproc.resize(mRgbaT, mRgbaT, frame.size());
+        }
 
         int cols = mRgbaT.cols();
         int rows = mRgbaT.rows();
