@@ -56,7 +56,6 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     public void onResume() {
         createList(PotholeList.getInstance());
         super.onResume();
-
     }
 
     private void createList(List<Pothole> potholeList) {

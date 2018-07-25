@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -252,13 +253,36 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Nullable
     private Location getLocation() {
         LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Location location = null;
+        Location currentLocation = null;
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
         ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         try {
             if (manager.getNetworkInfo(0).getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, locationListener);
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             } else {
-                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
         } catch (SecurityException e) {
             if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -272,7 +296,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                 ActivityCompat.requestPermissions(this.getActivity(), permissions, 0);
             }
         }
-        return location;
+        return currentLocation;
     }
 
     @Override
