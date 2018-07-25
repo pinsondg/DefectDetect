@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.dpgra.defetctdetect"
+        applicationId "com.example.dpgra.defectdetect"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
@@ -30,4 +30,5 @@ dependencies {
     implementation project(':openCVLibrary342')
     implementation 'com.android.support:support-v4:28.0.0-alpha3'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.android.support:support-dynamic-animation:27.1.1'
 }

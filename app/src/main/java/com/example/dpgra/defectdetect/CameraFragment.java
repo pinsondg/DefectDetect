@@ -1,4 +1,4 @@
-package com.example.dpgra.defetctdetect;
+package com.example.dpgra.defectdetect;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -21,14 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -39,12 +35,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
 
 import model.Darknet;
 import model.Pothole;
@@ -52,6 +42,12 @@ import model.PotholeList;
 
 import static org.opencv.android.BaseLoaderCallback.TAG;
 
+/**
+ * The fragment that shows the camera feed and detects the potholes.
+ *
+ * @author Daniel Pinson, Vamsi Yadav
+ * @version 1.0
+ */
 public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     private CameraBridgeViewBase mOpenCvCameraView;
@@ -67,10 +63,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         potholeList = potholeList.getInstance();
     }
 
-    public PotholeList getPotholeList() {
-        return potholeList;
-    }
-
+    /**
+     * Returns the one instance of the camera fragment.
+     *
+     * @return the camera fragment
+     */
     public static CameraFragment getInstance() {
         if ( cameraFragment == null ) {
             cameraFragment = new CameraFragment();
@@ -78,6 +75,9 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         return cameraFragment;
     }
 
+    /**
+     * Makes sure opencv can load successfully.
+     */
     private final BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this.getActivity()) {
         @SuppressLint("LongLogTag")
         @Override
@@ -208,6 +208,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         return pothole;
     }
 
+    /**
+     * Creates the id string for a pothole.
+     *
+     * @return the pothole id
+     */
     private String createPotholeId() {
         PotholeList list = PotholeList.getInstance();
         int num = 0;
@@ -219,6 +224,10 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         return retId;
     }
 
+    /**
+     * Prints the returned matrix outputted from the network.
+     * @param mat the mat to print
+     */
     private void printMat( Mat mat ) {
         for ( int i = 0; i < mat.rows(); i++) {
             System.out.print("[ ");
@@ -235,6 +244,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     }
 
 
+    /**
+     * Gets the current location of the phone.
+     *
+     * @return the current location
+     */
     @Nullable
     private Location getLocation() {
         LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -277,6 +291,13 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         }
     }
 
+    /**
+     * Gets the path of a file and create it in the app memory.
+     *
+     * @param file the file to find
+     * @param context context
+     * @return the pathname
+     */
     @SuppressLint("LongLogTag")
     private static String getPath(String file, Context context) {
         AssetManager assetManager = context.getAssets();
@@ -302,10 +323,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         return "";
     }
 
-    public int getItemId() {
-        return R.id.camera;
-    }
-
+    /**
+     * Adds the pothole to the pothole list.
+     *
+     * @param pothole the pothole to add
+     */
     public void addToPotholeList(Pothole pothole) {
         potholeList.add(pothole);
     }

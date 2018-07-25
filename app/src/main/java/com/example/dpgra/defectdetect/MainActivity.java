@@ -1,4 +1,4 @@
-package com.example.dpgra.defetctdetect;
+package com.example.dpgra.defectdetect;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -16,7 +16,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.List;
 
 import model.Darknet;
@@ -32,6 +30,9 @@ import model.PotholeList;
 
 /**
  * The main activity of the android app.
+ *
+ * @author Daniel Pinson, Vamsi Yadav
+ * @version 1.0
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem currentMenuItem;
 
 
+    /**
+     * Determines what to do when an item on the bottom navigation bar is selected.
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -175,6 +179,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets the view to the map view.
+     */
     public void setToMapView() {
         bottomNavigationView.setSelectedItemId(R.id.map);
     }

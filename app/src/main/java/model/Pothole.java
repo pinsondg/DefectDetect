@@ -11,6 +11,12 @@ import org.opencv.core.Size;
 
 import java.io.Serializable;
 
+/**
+ * Represents a pothole object.
+ *
+ * @author Daniel Pinson, Vamsi Yadav
+ * @version 1.0
+ */
 public class Pothole implements Serializable {
 
     public static final int SMALL_POTHOLE = 0;
@@ -77,8 +83,9 @@ public class Pothole implements Serializable {
             double oLat = ((Pothole) o).getLat();
             double oLon = ((Pothole) o).getLon();
             int oSize = ((Pothole) o).getSize();
+            String oId = ((Pothole) o).getId();
 
-            if ( oLat == lat && oLon == lon && oSize == size ) {
+            if ( oLat == lat && oLon == lon && oSize == size && oId.equals(id) ) {
                 return true;
             }
         }

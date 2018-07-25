@@ -1,4 +1,4 @@
-package com.example.dpgra.defetctdetect;
+package com.example.dpgra.defectdetect;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -23,22 +23,22 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 
 import model.Pothole;
 import model.PotholeList;
 
+/**
+ * The map section of the application. Shows the user where they are and where all of the potholes
+ * the app detected are.
+ *
+ * @author Daniel Pinson, Vamsi Yadav
+ * @version 1.0
+ */
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     private MapView mapView;
@@ -51,6 +51,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         super();
     }
 
+    /**
+     * Singleton method make it easy to access the only one.
+     * @return the instance of MapFragment
+     */
     public static MapFragment getInstance() {
         if ( mapFragment == null ) {
             mapFragment = new MapFragment();
@@ -58,10 +62,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         return mapFragment;
     }
 
+    /**
+     * Returns the current GoogleMap (note: the google map is changed every time this fragment is
+     * swiched back to)
+     * @return
+     */
     public GoogleMap getGmap() {
         return gmap;
     }
 
+    /**
+     * Gets the map view.
+     *
+     * @return the map view
+     */
     public MapView getMapView() {
         return mapView;
     }
@@ -99,7 +113,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             System.out.println("ON MAP READY!");
             gmap = googleMap;
             gmap.setOnMarkerClickListener(new MapClickListener(getActivity()));
-            PotholeList potholeList = CameraFragment.getInstance().getPotholeList();
+            PotholeList potholeList = PotholeList.getInstance();
             if (  potholeList != null && !potholeList.isEmpty() ) {
                 Iterator<Pothole> i = potholeList.iterator();
                 while ( i.hasNext() ) {
@@ -142,11 +156,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     }
 
+    /**
+     * Set the location to go to next time the map is shown.
+     *
+     * @param latlng the latitude and longitude to show
+     */
     public void setCustomLocation( LatLng latlng ) {
         customLocation = latlng;
     }
 
-    public void moveToLocation( double lat, double lng ) {
+    /**
+     * Moves the map to a certain location.
+     *
+     * @param lat the latitude to move to
+     * @param lng the longitude to move to
+     */
+    private void moveToLocation( double lat, double lng ) {
         LatLng location = new LatLng(lat, lng);
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, (float) 14.25));
     }
