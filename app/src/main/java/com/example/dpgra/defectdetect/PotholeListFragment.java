@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,7 +28,7 @@ import java.util.List;
 import model.Pothole;
 import model.PotholeList;
 
-public class PotholeListFragment extends Fragment implements View.OnClickListener, View.OnKeyListener {
+public class PotholeListFragment extends Fragment implements View.OnClickListener, TextWatcher {
 
     private View rootView;
     private FloatingActionButton clearButton;
@@ -37,7 +40,8 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
         rootView = inflater.inflate(R.layout.list_fragment, container, false);
             try {
                 editText = (EditText) rootView.findViewById(R.id.search_bar);
-                editText.setOnKeyListener(this);
+                //editText.setOnKeyListener(this);
+                editText.addTextChangedListener(this);
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -108,12 +112,12 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     }
 
 
-    @Override
+    //@Override
     public boolean onKey(View view, int i, KeyEvent keyEvent) {
-        System.out.print("KEY PRESSED");
-        System.out.print(keyEvent.getKeyCode());
+        Log.i("TAG","KEY PRESSED");
+        Log.i("TAG", new Integer(keyEvent.getKeyCode()).toString());
         if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            System.out.print("ENNNTEEERRR PRESSED!");
+            Log.i("TAG","ENNNTEEERRR PRESSED!");
              List<Pothole> results = search_for_string(editText.getText().toString());
             createList(results);
             ListView listView = rootView.findViewById(R.id.list_view);
@@ -122,5 +126,27 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        Log.i("TAG","KEY PRESSED");
+
+        Log.i("TAG","ENNNTEEERRR PRESSED!");
+        List<Pothole> results = search_for_string(editText.getText().toString());
+        createList(results);
+        ListView listView = rootView.findViewById(R.id.list_view);
+        PotholeListAdapter adapter = (PotholeListAdapter) listView.getAdapter();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }
