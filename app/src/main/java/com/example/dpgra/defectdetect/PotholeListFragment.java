@@ -1,4 +1,4 @@
-package com.example.dpgra.defetctdetect;
+package com.example.dpgra.defectdetect;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
