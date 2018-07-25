@@ -61,7 +61,12 @@ public class PotholeListAdapter extends ArrayAdapter<Pothole> {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PotholeList.getInstance().remove(position);
+                    if ( list instanceof PotholeList ) {
+                        list.remove(position);
+                    } else {
+                        list.remove(position);
+                        PotholeList.getInstance().remove(pothole);
+                    }
                     notifyDataSetChanged();
                 }
             });

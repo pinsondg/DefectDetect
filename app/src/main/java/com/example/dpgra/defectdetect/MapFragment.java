@@ -113,7 +113,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             System.out.println("ON MAP READY!");
             gmap = googleMap;
             gmap.setOnMarkerClickListener(new MapClickListener(getActivity()));
-            PotholeList potholeList = CameraFragment.getInstance().getPotholeList();
+            PotholeList potholeList = PotholeList.getInstance();
             if (  potholeList != null && !potholeList.isEmpty() ) {
                 Iterator<Pothole> i = potholeList.iterator();
                 while ( i.hasNext() ) {

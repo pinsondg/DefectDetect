@@ -83,8 +83,9 @@ public class Pothole implements Serializable {
             double oLat = ((Pothole) o).getLat();
             double oLon = ((Pothole) o).getLon();
             int oSize = ((Pothole) o).getSize();
+            String oId = ((Pothole) o).getId();
 
-            if ( oLat == lat && oLon == lon && oSize == size ) {
+            if ( oLat == lat && oLon == lon && oSize == size && oId.equals(id) ) {
                 return true;
             }
         }
