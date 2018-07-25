@@ -30,6 +30,9 @@ import model.PotholeList;
 
 /**
  * The main activity of the android app.
+ *
+ * @author Daniel Pinson, Vamsi Yadav
+ * @version 1.0
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem currentMenuItem;
 
 
+    /**
+     * Determines what to do when an item on the bottom navigation bar is selected.
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -173,6 +179,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets the view to the map view.
+     */
     public void setToMapView() {
         bottomNavigationView.setSelectedItemId(R.id.map);
     }

@@ -11,6 +11,12 @@ import org.opencv.core.Size;
 
 import java.io.Serializable;
 
+/**
+ * Represents a pothole object.
+ *
+ * @author Daniel Pinson, Vamsi Yadav
+ * @version 1.0
+ */
 public class Pothole implements Serializable {
 
     public static final int SMALL_POTHOLE = 0;

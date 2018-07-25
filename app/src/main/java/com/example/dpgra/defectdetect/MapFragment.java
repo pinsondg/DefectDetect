@@ -27,18 +27,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.HashMap;
 import java.util.Iterator;
 
 import model.Pothole;
 import model.PotholeList;
 
+/**
+ * The map section of the application. Shows the user where they are and where all of the potholes
+ * the app detected are.
+ *
+ * @author Daniel Pinson, Vamsi Yadav
+ * @version 1.0
+ */
 public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     private MapView mapView;
     private GoogleMap gmap;
     private LatLng customLocation;
-    private HashMap<MarkerOptions, Pothole> pothole_map;
     private static MapFragment mapFragment;
 
     @SuppressLint("ValidFragment")
@@ -46,6 +51,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         super();
     }
 
+    /**
+     * Singleton method make it easy to access the only one.
+     * @return the instance of MapFragment
+     */
     public static MapFragment getInstance() {
         if ( mapFragment == null ) {
             mapFragment = new MapFragment();
@@ -53,10 +62,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         return mapFragment;
     }
 
+    /**
+     * Returns the current GoogleMap (note: the google map is changed every time this fragment is
+     * swiched back to)
+     * @return
+     */
     public GoogleMap getGmap() {
         return gmap;
     }
 
+    /**
+     * Gets the map view.
+     *
+     * @return the map view
+     */
     public MapView getMapView() {
         return mapView;
     }
@@ -137,11 +156,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     }
 
+    /**
+     * Set the location to go to next time the map is shown.
+     *
+     * @param latlng the latitude and longitude to show
+     */
     public void setCustomLocation( LatLng latlng ) {
         customLocation = latlng;
     }
 
-    public void moveToLocation( double lat, double lng ) {
+    /**
+     * Moves the map to a certain location.
+     *
+     * @param lat the latitude to move to
+     * @param lng the longitude to move to
+     */
+    private void moveToLocation( double lat, double lng ) {
         LatLng location = new LatLng(lat, lng);
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, (float) 14.25));
     }

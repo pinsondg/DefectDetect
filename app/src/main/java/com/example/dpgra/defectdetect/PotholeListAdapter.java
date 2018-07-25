@@ -13,17 +13,38 @@ import java.util.List;
 import model.Pothole;
 import model.PotholeList;
 
+/**
+ * The adapter for the pothole list. Transforms each item in the pothole list into a view that can
+ * be used by the list view.
+ *
+ * @author Daniel Pinson, Vamsi Yadav
+ * @version 1.0
+ */
 public class PotholeListAdapter extends ArrayAdapter<Pothole> {
 
     private List<Pothole> list;
     private PotholeListFragment fragment;
 
+    /**
+     * Constructor for the pothole list adapter.
+     *
+     * @param context context
+     * @param list the list to create
+     * @param fragment the fragment of the list view
+     */
     public PotholeListAdapter(@NonNull Context context, List<Pothole> list, PotholeListFragment fragment) {
         super(context, 0, list);
         this.list = list;
         this.fragment = fragment;
     }
 
+    /**
+     * Turns the items of a list into the view items of the pothole list.
+     * @param position the position in the list
+     * @param convertView the return view
+     * @param parent the parent view group
+     * @return the view to display
+     */
     @NonNull
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {

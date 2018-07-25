@@ -8,10 +8,21 @@ import com.google.android.gms.maps.model.Marker;
 
 import model.Pothole;
 
+/**
+ * Listens for a map click.
+ *
+ * @author Daniel Pinson
+ * @version 1.0
+ */
 public class MapClickListener implements GoogleMap.OnMarkerClickListener {
 
     private Activity activity;
 
+    /**
+     * Constructor for the map click.
+     *
+     * @param activity the main activity
+     */
     public MapClickListener(Activity activity) {
         this.activity = activity;
     }

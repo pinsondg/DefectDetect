@@ -2,6 +2,7 @@ package com.example.dpgra.defectdetect;
 
 import android.database.DataSetObserver;
 import android.support.animation.DynamicAnimation;
+import android.support.animation.FlingAnimation;
 import android.support.animation.SpringAnimation;
 import android.support.v4.app.Fragment;
 import android.view.MotionEvent;
@@ -11,6 +12,12 @@ import com.google.android.gms.maps.model.LatLng;
 
 import model.Pothole;
 
+/**
+ * A spring animation that reveals a hidden button when the user swipes over a view.
+ *
+ * @author Daniel Pinson
+ * @version 1.0
+ */
 public class SlidingSpringAnimation extends DataSetObserver implements View.OnTouchListener {
 
     public static final int RIGHT_TO_LEFT = -1;
@@ -24,6 +31,14 @@ public class SlidingSpringAnimation extends DataSetObserver implements View.OnTo
     private Fragment fragment;
     private Pothole pothole;
 
+    /**
+     * Constructor for a sliding spring animation
+     * @param button the hidden button to show
+     * @param view the view to slide over
+     * @param direction the direction of the slide - use the static finals
+     * @param fragment the fragment the view is a part of
+     * @param pothole the pothole associated with the view
+     */
     public SlidingSpringAnimation(View button, View view, int direction, Fragment fragment, Pothole pothole) {
         this.x1 = 0;
         this.x2 = 0;
@@ -35,6 +50,13 @@ public class SlidingSpringAnimation extends DataSetObserver implements View.OnTo
         this.view = view;
     }
 
+    /**
+     * Determines where to slide when the user touches or swipes the screen.
+     *
+     * @param view the view to slide
+     * @param motionEvent the motion even the user inputs
+     * @return true if executed, false if otherwise
+     */
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         this.view = view;
@@ -73,6 +95,10 @@ public class SlidingSpringAnimation extends DataSetObserver implements View.OnTo
         return true;
     }
 
+    /**
+     * Sends the view back to its starting point.
+     * @param view the view to send back
+     */
     public void sendBack( View view ) {
         SpringAnimation animation = new SpringAnimation(view, DynamicAnimation.TRANSLATION_X,
                 0);
