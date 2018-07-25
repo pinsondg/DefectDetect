@@ -44,7 +44,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private MapView mapView;
     private GoogleMap gmap;
     private LatLng customLocation;
-    private HashMap<MarkerOptions, Pothole> pothole_map;
     private static MapFragment mapFragment;
 
     @SuppressLint("ValidFragment")
@@ -123,7 +122,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             }
             if ( loc != null && customLocation == null) {
                 moveToLocation(loc.getLatitude(), loc.getLongitude());
-            } else {
+            } else if(customLocation != null){
                 moveToLocation( customLocation.latitude, customLocation.longitude );
             }
 
