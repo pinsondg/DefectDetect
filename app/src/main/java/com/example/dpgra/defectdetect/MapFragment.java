@@ -125,15 +125,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     marker.setTag(temp_pothole);
                 }
             }
-            ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-            LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+            //ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            //LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
             gmap.setMyLocationEnabled(true);
-            Location loc = null;
+            Location loc = ((MainActivity)this.getActivity()).getLocation();
+            /*
             if ( manager.getNetworkInfo(0).getDetailedState() == NetworkInfo.DetailedState.CONNECTED ) {
                 loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             } else {
                 loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
+            */
             if ( loc != null && customLocation == null) {
                 moveToLocation(loc.getLatitude(), loc.getLongitude());
             } else if(customLocation != null){
