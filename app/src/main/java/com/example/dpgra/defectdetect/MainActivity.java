@@ -1,6 +1,7 @@
 package com.example.dpgra.defectdetect;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -216,15 +217,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
-        ConnectivityManager manager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         try {
-            if (manager.getNetworkInfo(0).getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, locationListener);
-                currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            } else {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         } catch (SecurityException e) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
