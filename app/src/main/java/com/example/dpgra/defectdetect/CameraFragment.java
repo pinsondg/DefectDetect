@@ -203,12 +203,13 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         Mat subFrame = mRgbaT.submat(y1, y2, x1, x2);
         cols = subFrame.cols();
         rows = subFrame.rows();
+        int sevarity = 0;
 
         if ( net != null ) {
             Mat retMat = net.forwardLoadedNetwork(mRgbaT);
             for ( int i = 0; i < retMat.rows(); i++ ) {
                 double confidence = retMat.get(i, 5)[0];
-                if ( confidence > 0.63 ) {
+                if ( confidence > 0.60 ) {
                     printMat(retMat.row(i));
                     System.out.println("YESSSSSS");
                     double xCenter = retMat.get(i, 0)[0]*cols;
@@ -217,8 +218,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     double height = retMat.get(i, 3)[0]*rows;
                     Imgproc.rectangle(subFrame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
                             , yCenter + height / 2), new Scalar(255, 0, 0), 10);
-                    Pothole pothole = createPothole();
+                    sevarity++;
                 }
+            }
+            if ( sevarity > 0 ) {
+                createPothole(sevarity);
             }
         } else {
             Log.i("System", "Problem forwarding network");
@@ -226,11 +230,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         return mRgbaT;
     }
 
-    private Pothole createPothole() {
+    private Pothole createPothole( int sevatity ) {
         Location location = ((MainActivity) this.getActivity()).getLocation();
         Pothole pothole = null;
         if ( location != null ) {
-            pothole = new Pothole( location, createPotholeId(), Pothole.SMALL_POTHOLE);
+            pothole = new Pothole( location, createPotholeId(), sevatity);
             addToPotholeList(pothole);
         }
         return pothole;

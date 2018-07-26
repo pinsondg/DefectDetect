@@ -19,9 +19,9 @@ import java.io.Serializable;
  */
 public class Pothole implements Serializable {
 
-    public static final int SMALL_POTHOLE = 0;
-    public static final int MEDIUM_POTHOLE = 1;
-    public static final int LARGE_POTHOLE = 2;
+    public static final int SMALL_POTHOLE = 1;
+    public static final int MEDIUM_POTHOLE = 2;
+    public static final int LARGE_POTHOLE = 3;
 
     private double lon;
     private double lat;
