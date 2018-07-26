@@ -2,7 +2,9 @@ package com.example.dpgra.defectdetect;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -204,14 +206,13 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         cols = subFrame.cols();
         rows = subFrame.rows();
         int sevarity = 0;
-
         if ( net != null ) {
             Mat retMat = net.forwardLoadedNetwork(mRgbaT);
             for ( int i = 0; i < retMat.rows(); i++ ) {
                 double confidence = retMat.get(i, 5)[0];
                 if ( confidence > 0.65 ) {
                     printMat(retMat.row(i));
-                    System.out.println("YESSSSSS");
+                    //System.out.println("YESSSSSS");
                     double xCenter = retMat.get(i, 0)[0]*cols;
                     double yCenter = retMat.get(i, 1)[0]*rows;
                     double width = retMat.get(i, 2)[0]*cols;
@@ -221,6 +222,8 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     sevarity++;
                 }
             }
+            retMat.release();
+            subFrame.release();
             if ( sevarity > 0 ) {
                 createPothole(sevarity);
             }
@@ -262,16 +265,16 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
      */
     private void printMat( Mat mat ) {
         for ( int i = 0; i < mat.rows(); i++) {
-            System.out.print("[ ");
+            //System.out.print("[ ");
             for ( int n = 0; n < mat.cols(); n++ ) {
                 try {
-                    System.out.printf( "%.2f ", mat.get(i, n)[0]);
+                    //System.out.printf( "%.2f ", mat.get(i, n)[0]);
                 } catch (NullPointerException e) {
-                    System.out.print( " " );
+                    //System.out.print( " " );
                 }
 
             }
-            System.out.println("]");
+            //System.out.println("]");
         }
     }
 
@@ -331,4 +334,5 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     public void addToPotholeList(Pothole pothole) {
         potholeList.add(pothole);
     }
+
 }

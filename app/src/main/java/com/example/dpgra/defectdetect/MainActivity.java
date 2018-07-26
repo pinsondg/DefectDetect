@@ -19,6 +19,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -240,5 +241,12 @@ public class MainActivity extends AppCompatActivity {
      */
     public void setToMapView() {
         bottomNavigationView.setSelectedItemId(R.id.map);
+    }
+
+    @Override
+    public void onLowMemory() {
+        Toast.makeText(this,"Memory Low! Switiching back to map.", Toast.LENGTH_SHORT);
+        setToMapView();
+        super.onLowMemory();
     }
 }

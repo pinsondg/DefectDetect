@@ -27,6 +27,8 @@ public class Darknet {
 	private Net network;
 	private File cfg;
 	private File model;
+	private Scalar scalar;
+	private Size size;
 
 	/**
 	 * Constructor.
@@ -39,8 +41,10 @@ public class Darknet {
 		this.model = new File( model );
 		deepNetworkLoader = new Dnn();
 		network = deepNetworkLoader.readNetFromDarknet( cfg, model );
+		scalar = new Scalar(0,0,0);
+		size = new Size(448,448);
 		for( String name : network.getLayerNames()) {
-			System.out.println(name);
+			//System.out.println(name);
 		}
 	}
 
@@ -56,8 +60,10 @@ public class Darknet {
 		deepNetworkLoader = new Dnn();
 		network = deepNetworkLoader.readNetFromDarknet(this.cfg.getAbsolutePath(),
 				this.model.getAbsolutePath());
+		scalar = new Scalar(0,0,0);
+		size = new Size(448,448);
 		for( String name : network.getLayerNames()) {
-			System.out.println(name);
+			//System.out.println(name);
 		}
 	}
 
@@ -88,14 +94,15 @@ public class Darknet {
 	 */
 	public Mat forwardLoadedNetwork( Mat image ) {
 
-		image = Dnn.blobFromImage(image, .003922, new Size(448, 448),
-			new Scalar(0,0,0) , false, false);
-		long time1 = System.nanoTime();
+		image = Dnn.blobFromImage(image, .003922, size,
+			scalar , false, false);
+		//long time1 = System.nanoTime();
 		//image = Dnn.blobFromImage(image);
 		network.setInput(image, "data");
 		Mat retBlob = network.forward("detection_out");
-		long time2 = System.nanoTime();
-		System.out.println("Took " + (time2 - time1) * Math.pow(10, -9) + "s to forward network");
+		image.release();
+		//long time2 = System.nanoTime();
+		//System.out.println("Took " + (time2 - time1) * Math.pow(10, -9) + "s to forward network");
 		return retBlob;
 	}
 
