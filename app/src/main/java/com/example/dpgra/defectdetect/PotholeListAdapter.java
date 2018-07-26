@@ -80,7 +80,7 @@ public class PotholeListAdapter extends ArrayAdapter<Pothole> {
             TextView severity = (TextView) convertView.findViewById(R.id.severity);
             // Populate the data into the template view using the data object
             header.setText(pothole.getId());
-            coords.setText("Coordinates: " + String.format("%.4f", pothole.getLat()) + ", " + String.format("%.4f", pothole.getLon()));
+            coords.setText("Lat: " + String.format("%.4f", pothole.getLat()) + ", Lon: " + String.format("%.4f", pothole.getLon()));
             severity.setText("Severity: " + pothole.getSize());
             // Return the completed view to render on screen
         }
