@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            if ( currentFragment instanceof PotholeListFragment ) {
+                ((PotholeListFragment) currentFragment).getEditText().clearFocus();
+            }
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             Fragment fragment = null;

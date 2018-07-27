@@ -92,7 +92,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
-                    Log.i(TAG, "OpenCV loaded successfully");
+                    //Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
                     break;
                 }
@@ -153,8 +153,8 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         }
 
         AssetManager assetManager = getResources().getAssets();
-        String cfgFile = getPath("yolov2-tiny2.cfg", this.getActivity());
-        String weightsFile = getPath("yolov2-tiny2_58800.weights", this.getActivity());
+        String cfgFile = getPath(".cfg", this.getActivity());
+        String weightsFile = getPath(".weights", this.getActivity());
 
 
         if ( cfgFile != null && weightsFile != null ) {
@@ -228,7 +228,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                 createPothole(sevarity);
             }
         } else {
-            Log.i("System", "Problem forwarding network");
+            //Log.i("System", "Problem forwarding network");
         }
         return mRgbaT;
     }
@@ -297,31 +297,44 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     /**
      * Gets the path of a file and create it in the app memory.
      *
-     * @param file the file to find
+     * @param fileType the file to find
      * @param context context
      * @return the pathname
      */
     @SuppressLint("LongLogTag")
-    private static String getPath(String file, Context context) {
+    private static String getPath(String fileType, Context context) {
         AssetManager assetManager = context.getAssets();
-
+        String[] pathNames = {};
+        String fileName = "";System.out.println("-----------------------------------------------------------------------");
+        try {
+            pathNames = assetManager.list("yolo");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for ( String filePath : pathNames ) {
+            System.out.println(filePath);
+            if ( filePath.endsWith(fileType)) {
+                fileName = filePath;
+                break;
+            }
+        }
         BufferedInputStream inputStream = null;
         try {
             // Read data from assets.
-            inputStream = new BufferedInputStream(assetManager.open(file));
+            inputStream = new BufferedInputStream(assetManager.open(fileName));
             byte[] data = new byte[inputStream.available()];
             inputStream.read(data);
             inputStream.close();
 
             // Create copy file in storage.
-            File outFile = new File(context.getFilesDir(), file);
+            File outFile = new File(context.getFilesDir(), fileName);
             FileOutputStream os = new FileOutputStream(outFile);
             os.write(data);
             os.close();
             // Return a path to file which may be read in common way.
             return outFile.getAbsolutePath();
         } catch (IOException ex) {
-            Log.i(TAG, "Failed to upload a file");
+            //Log.i(TAG, "Failed to upload a file");
         }
         return "";
     }

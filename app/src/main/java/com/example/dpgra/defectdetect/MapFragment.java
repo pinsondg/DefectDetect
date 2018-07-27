@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -109,7 +110,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void onMapReady(GoogleMap googleMap) {
         try {
             MapsInitializer.initialize(this.getActivity());
-            System.out.println("ON MAP READY!");
+            //System.out.println("ON MAP READY!");
             gmap = googleMap;
             gmap.setOnMarkerClickListener(new MapClickListener(getActivity()));
             PotholeList potholeList = PotholeList.getInstance();
@@ -124,17 +125,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     marker.setTag(temp_pothole);
                 }
             }
-            //ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-            //LocationManager locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
             gmap.setMyLocationEnabled(true);
             Location loc = ((MainActivity)this.getActivity()).getLocation();
-            /*
-            if ( manager.getNetworkInfo(0).getDetailedState() == NetworkInfo.DetailedState.CONNECTED ) {
-                loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            } else {
-                loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            }
-            */
             if ( loc != null && customLocation == null) {
                 moveToLocation(loc.getLatitude(), loc.getLongitude());
             } else if(customLocation != null){
@@ -185,14 +177,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     @Override
     public void onResume() {
-        System.out.print("MAP RUSUMED!");
+        //System.out.print("MAP RUSUMED!");
         mapView.onResume();
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        System.out.println("MAP PAUSED!");
+        //System.out.println("MAP PAUSED!");
         mapView.onPause();
         super.onPause();
     }

@@ -113,10 +113,10 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
 
     //@Override
     public boolean onKey(View view, int i, KeyEvent keyEvent) {
-        Log.i("TAG","KEY PRESSED");
-        Log.i("TAG", new Integer(keyEvent.getKeyCode()).toString());
+        //Log.i("TAG","KEY PRESSED");
+        //Log.i("TAG", new Integer(keyEvent.getKeyCode()).toString());
         if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            Log.i("TAG","ENNNTEEERRR PRESSED!");
+            //Log.i("TAG","ENNNTEEERRR PRESSED!");
              List<Pothole> results = search_for_string(editText.getText().toString());
             createList(results);
             ListView listView = rootView.findViewById(R.id.list_view);
@@ -134,9 +134,9 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        Log.i("TAG","KEY PRESSED");
+        //Log.i("TAG","KEY PRESSED");
 
-        Log.i("TAG","ENNNTEEERRR PRESSED!");
+        //Log.i("TAG","ENNNTEEERRR PRESSED!");
         List<Pothole> results = search_for_string(editText.getText().toString());
         createList(results);
         ListView listView = rootView.findViewById(R.id.list_view);
@@ -147,5 +147,21 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     @Override
     public void afterTextChanged(Editable editable) {
 
+    }
+
+    @Override
+    public void onPause() {
+        editText.clearFocus();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        editText.clearFocus();
+        super.onDestroy();
+    }
+
+    public EditText getEditText() {
+        return editText;
     }
 }
