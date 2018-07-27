@@ -90,7 +90,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.mapfragment, container, false);
         MapsInitializer.initialize(this.getActivity());
-
         return mView;
     }
 

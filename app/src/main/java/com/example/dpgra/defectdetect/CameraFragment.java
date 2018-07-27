@@ -154,7 +154,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
 
         AssetManager assetManager = getResources().getAssets();
         String cfgFile = getPath("yolov2-tiny2.cfg", this.getActivity());
-        String weightsFile = getPath("yolov2-tiny2_36500.weights", this.getActivity());
+        String weightsFile = getPath("yolov2-tiny2_58800.weights", this.getActivity());
 
 
         if ( cfgFile != null && weightsFile != null ) {
