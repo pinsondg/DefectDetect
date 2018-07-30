@@ -190,16 +190,15 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     @Override
     public void onScroll(AbsListView absListView, int i, int i1, int i2) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((View)absListView.getParent()).getLayoutParams();
-        //Animation a = new TranslateAnimation(0, 0, 0, -editText.getHeight() );
-        //editText.setAnimation(a);
         if ( oldScrollY < i && !isHidden && annimationEnded) {
             ((View)editText.getParent()).animate().translationYBy( -editText.getHeight()).setDuration(300).setListener(this);
-            params.topMargin = -editText.getMeasuredHeight();
+            ((View)absListView.getParent()).animate().yBy(-editText.getHeight()).setDuration(300);
+            params.bottomMargin = -editText.getMeasuredHeight();
             ((View)absListView.getParent()).setLayoutParams(params);
             isHidden = true;
         } else if ( oldScrollY > i && isHidden && annimationEnded ){
             ((View)editText.getParent()).animate().translationYBy( editText.getHeight()).setDuration(300).setListener(this);
-            params.topMargin = 0;
+            ((View)absListView.getParent()).animate().yBy(editText.getHeight()).setDuration(300);
             ((View)absListView.getParent()).setLayoutParams(params);
             isHidden = false;
         }
