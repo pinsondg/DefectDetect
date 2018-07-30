@@ -1,5 +1,6 @@
 package com.example.dpgra.defectdetect;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,6 +19,9 @@ import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -32,13 +36,14 @@ import model.Pothole;
 import model.PotholeList;
 
 @SuppressLint("NewApi")
-public class PotholeListFragment extends Fragment implements View.OnClickListener, TextWatcher, AbsListView.OnScrollListener {
+public class PotholeListFragment extends Fragment implements View.OnClickListener, TextWatcher, AbsListView.OnScrollListener, Animator.AnimatorListener {
 
     private View rootView;
     private FloatingActionButton clearButton;
     private EditText editText;
     private int oldScrollY;
     private boolean isHidden = false;
+    private boolean annimationEnded = true;
     private int origHeight;
 
     @Nullable
@@ -185,18 +190,39 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     @Override
     public void onScroll(AbsListView absListView, int i, int i1, int i2) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((View)absListView.getParent()).getLayoutParams();
-        ViewGroup.LayoutParams params1 = absListView.getLayoutParams();
-        if ( oldScrollY < i && !isHidden ) {
-            ((View)editText.getParent()).animate().translationYBy( -editText.getHeight()).setDuration(300);
+        //Animation a = new TranslateAnimation(0, 0, 0, -editText.getHeight() );
+        //editText.setAnimation(a);
+        if ( oldScrollY < i && !isHidden && annimationEnded) {
+            ((View)editText.getParent()).animate().translationYBy( -editText.getHeight()).setDuration(300).setListener(this);
             params.topMargin = -editText.getMeasuredHeight();
             ((View)absListView.getParent()).setLayoutParams(params);
             isHidden = true;
-        } else if ( oldScrollY > i && isHidden ){
-            ((View)editText.getParent()).animate().translationYBy( editText.getHeight()).setDuration(300);
+        } else if ( oldScrollY > i && isHidden && annimationEnded ){
+            ((View)editText.getParent()).animate().translationYBy( editText.getHeight()).setDuration(300).setListener(this);
             params.topMargin = 0;
             ((View)absListView.getParent()).setLayoutParams(params);
             isHidden = false;
         }
         oldScrollY = i;
+    }
+
+    @Override
+    public void onAnimationStart(Animator animator) {
+        annimationEnded = false;
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animator) {
+        annimationEnded = true;
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animator) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animator) {
+
     }
 }
