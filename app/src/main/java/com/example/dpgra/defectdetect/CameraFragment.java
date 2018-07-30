@@ -182,7 +182,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Mat frame = inputFrame.rgba();
-        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2RGB);
+        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGRA2RGB);
         Mat mRgbaT = frame;
         if(OrientationIsValid == 1) {
             mRgbaT = frame.t();

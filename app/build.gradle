@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'DefectDetectKey'
             keyPassword 'Welc0me.'
-            storeFile file('C:/Users/dpgra/keystores/defect_detect.jks')
+            storeFile file('/home/vamsi/keystores/defect_detect.jks')
             storePassword 'Welc0me.'
         }
     }
