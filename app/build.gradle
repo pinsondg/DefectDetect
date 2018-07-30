@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'DefectDetectKey'
+            keyPassword 'Welc0me.'
+            storeFile file('C:/Users/dpgra/keystores/defect_detect.jks')
+            storePassword 'Welc0me.'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.dpgra.defectdetect"
@@ -14,6 +22,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }

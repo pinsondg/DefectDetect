@@ -6,23 +6,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText android:id="@+id/search_bar"
-        android:drawableLeft="@android:drawable/ic_search_category_default"
-        android:layout_alignParentTop="true"
-        android:hint="Enter search phrase here"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_below="@id/search_layout"
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </ListView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/search_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:singleLine="true"
-        android:imeOptions="actionDone"
-        />
+        android:layout_alignParentTop="true">
 
-    <ListView
-        android:id="@+id/list_view"
-        android:layout_below="@id/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
+        <EditText android:id="@+id/search_bar"
+            android:drawableLeft="@android:drawable/ic_search_category_default"
+            android:layout_alignParentTop="true"
+            android:hint="Enter search phrase here"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            />
+
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"

@@ -1,5 +1,6 @@
 package com.example.dpgra.defectdetect;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -17,8 +18,10 @@ import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,11 +31,15 @@ import java.util.List;
 import model.Pothole;
 import model.PotholeList;
 
-public class PotholeListFragment extends Fragment implements View.OnClickListener, TextWatcher {
+@SuppressLint("NewApi")
+public class PotholeListFragment extends Fragment implements View.OnClickListener, TextWatcher, AbsListView.OnScrollListener {
 
     private View rootView;
     private FloatingActionButton clearButton;
     private EditText editText;
+    private int oldScrollY;
+    private boolean isHidden = false;
+    private int origHeight;
 
     @Nullable
     @Override
@@ -58,9 +65,13 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
         super.onResume();
     }
 
+    @SuppressLint("NewApi")
     private void createList(List<Pothole> potholeList) {
         ListView listView = (ListView) rootView.findViewById(R.id.list_view);
+        origHeight = listView.getHeight();
         listView.setAdapter( new PotholeListAdapter(this.getActivity(), potholeList, this));
+        listView.setOnScrollListener(this);
+        listView.setFastScrollEnabled(true);
     }
 
 
@@ -89,7 +100,7 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
 
 
     public List<Pothole> search_for_string(String str) {
-         List<Pothole> new_list = PotholeList.getInstance();
+        List<Pothole> new_list = PotholeList.getInstance();
         str = str.toLowerCase();
         if (!str.isEmpty()) {
             new_list = new ArrayList<Pothole>();
@@ -163,5 +174,29 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
 
     public EditText getEditText() {
         return editText;
+    }
+
+
+    @Override
+    public void onScrollStateChanged(AbsListView absListView, int i) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((View)absListView.getParent()).getLayoutParams();
+        ViewGroup.LayoutParams params1 = absListView.getLayoutParams();
+        if ( oldScrollY < i && !isHidden ) {
+            ((View)editText.getParent()).animate().translationYBy( -editText.getHeight()).setDuration(300);
+            params.topMargin = -editText.getMeasuredHeight();
+            ((View)absListView.getParent()).setLayoutParams(params);
+            isHidden = true;
+        } else if ( oldScrollY > i && isHidden ){
+            ((View)editText.getParent()).animate().translationYBy( editText.getHeight()).setDuration(300);
+            params.topMargin = 0;
+            ((View)absListView.getParent()).setLayoutParams(params);
+            isHidden = false;
+        }
+        oldScrollY = i;
     }
 }
