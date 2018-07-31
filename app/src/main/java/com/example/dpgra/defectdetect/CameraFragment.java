@@ -344,8 +344,8 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
      *
      * @param pothole the pothole to add
      */
-    public void addToPotholeList(Pothole pothole) {
-        potholeList.add(pothole);
+    public boolean addToPotholeList(Pothole pothole) {
+        return potholeList.add(pothole);
     }
 
 }
