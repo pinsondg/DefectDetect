@@ -88,6 +88,7 @@ public class JavaCamera2View extends CameraBridgeViewBase {
     protected boolean initializeCamera() {
         Log.i(LOGTAG, "initializeCamera");
         CameraManager manager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
+
         try {
             String camList[] = manager.getCameraIdList();
             if (camList.length == 0) {

@@ -1,30 +1,23 @@
 package com.example.dpgra.defectdetect;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothClass;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.hardware.Camera;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -43,11 +36,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+//import model.CameraBridgeViewBase;
 import model.Darknet;
 import model.Pothole;
 import model.PotholeList;
-
-import static org.opencv.android.BaseLoaderCallback.TAG;
 
 /**
  * The fragment that shows the camera feed and detects the potholes.
@@ -120,6 +112,12 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.camera_fragment, container, false);
         mOpenCvCameraView = (CameraBridgeViewBase) rootView.findViewById(R.id.CameraView);
+
+        String myDeviceModel = android.os.Build.MODEL;
+        if(!myDeviceModel.toLowerCase().contains("sdk")) {
+            mOpenCvCameraView.setAngle(90);
+        }
+        System.out.print(myDeviceModel);
         mOpenCvCameraView.setCvCameraViewListener(this);
         return rootView;
     }
@@ -150,6 +148,8 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     OrientationIsValid = 1;
                 }
             }).show();
+
+
         }
 
         AssetManager assetManager = getResources().getAssets();
