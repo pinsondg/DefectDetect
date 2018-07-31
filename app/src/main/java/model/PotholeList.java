@@ -32,4 +32,18 @@ public class PotholeList extends ArrayList<Pothole> {
         }
     }
 
+    @Override
+    public boolean add(Pothole pothole) {
+        boolean flag = true;
+        for ( Pothole currentPothole : potholeList ) {
+            if ( currentPothole.getLat() == pothole.getLat() && currentPothole.getLon() == pothole.getLon() ) {
+                flag = false;
+                break;
+            }
+        }
+        if ( flag ) {
+            super.add(pothole);
+        }
+        return flag;
+    }
 }
