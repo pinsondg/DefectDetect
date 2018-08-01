@@ -48,12 +48,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private LatLng customLocation;
     private static MapFragment mapFragment;
     private LocationManager locationManager;
+    private LocationChangeListener locationListener;
 
     public boolean ButtonClicked = true;
 
     @SuppressLint("ValidFragment")
     private MapFragment() {
         super();
+        locationListener = new LocationChangeListener(getActivity(), getContext(), this);
     }
 
     /**
@@ -101,7 +103,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mapView = view.findViewById(R.id.mapView);
         if (mapView != null) {
             mapView.onCreate(null);
@@ -134,7 +135,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             Location loc = ((MainActivity)this.getActivity()).getLocation();
 
             //Listens for location updates and calls onLocationChange()
-            gmap.setOnMyLocationButtonClickListener(new LocationChangeListener(getActivity(), getContext(), mapFragment));
+            gmap.setOnMyLocationButtonClickListener(locationListener);
+            gmap.setOnCameraMoveStartedListener(locationListener);
 
             locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,this);
