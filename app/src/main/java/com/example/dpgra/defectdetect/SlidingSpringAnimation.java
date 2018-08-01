@@ -65,33 +65,72 @@ public class SlidingSpringAnimation extends DataSetObserver implements View.OnTo
                     direction*(this.button.getMeasuredWidth()));
             switch(motionEvent.getAction())
             {
-                case MotionEvent.ACTION_DOWN:
+                case  MotionEvent.ACTION_DOWN:
                     x1 = motionEvent.getX();
                     break;
-                case MotionEvent.ACTION_UP:
-                    x2 = motionEvent.getX();
-                    float deltaX = x2 - x1;
-                    if (Math.abs(deltaX) > this.button.getMeasuredWidth())
-                    {
-                        if ( x2 < x1 ) {
-                            animation.start();
-                            isRevealed = true;
-                        } else {
-                            sendBack( view );
-                        }
+                case MotionEvent.ACTION_MOVE:
+                    float x = motionEvent.getX();
+                    if ( view.getX() >= -button.getWidth() && x < x1 ) {
+                        System.out.println(x);
+                        view.animate().xBy(x - x1).setDuration(0);
+                    } else if ( view.getX() <= 0 && x > x1 ) {
+                        view.animate().xBy(x - x1).setDuration(0);
                     }
-                    else {
+                    x1 = x;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if ( view.getX() > -button.getWidth() && view.getX() != 0 ) {
+                        sendBack(view);
+                    } else if( view.getX() == 0 ) {
                         MapFragment.getInstance().setCustomLocation(new LatLng(pothole.getLat(), pothole.getLon()));
                         ((MainActivity)fragment.getActivity()).setToMapView();
+                        sendBack(view);
+                    } else if( view.getX() <= -button.getWidth() ) {
+                        animation.start();
+                        isRevealed = true;
+                    }
+                    break;
+                default:
+                    if ( view.getX() < -button.getWidth() / 3 ) {
+                        animation.start();
+                        isRevealed = true;
+                    } else {
                         sendBack(view);
                     }
                     break;
             }
+
         }
         else {
+            switch (motionEvent.getAction())
+            {
+                case  MotionEvent.ACTION_DOWN:
+                    x1 = motionEvent.getX();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float x = motionEvent.getX();
+                    if ( view.getX() >= -button.getWidth() && x < x1 ) {
+                        System.out.println(x);
+                        view.animate().xBy(x - x1).setDuration(0);
+                    } else if ( view.getX() <= 0 && x > x1 ) {
+                        view.animate().xBy(x - x1).setDuration(0);
+                    }
+                    x1 = x;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if ( view.getX() > -button.getWidth() ) {
+                        sendBack(view);
+                    }
+                default:
+                    sendBack(view);
+            }
             if ( motionEvent.getAction() == MotionEvent.ACTION_UP )
             sendBack( view );
         }
+        if ( view.getX() == 0 ) {
+            isRevealed = false;
+        }
+
         return true;
     }
 
