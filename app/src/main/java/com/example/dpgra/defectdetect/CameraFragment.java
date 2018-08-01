@@ -234,12 +234,15 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     }
 
     private Pothole createPothole( int sevatity ) {
-        Location location = ((MainActivity) this.getActivity()).getLocation();
         Pothole pothole = null;
-        if ( location != null ) {
-            pothole = new Pothole( location, createPotholeId(), sevatity);
-            addToPotholeList(pothole);
+        if ( this.getActivity() != null ) {
+            Location location = ((MainActivity) this.getActivity()).getLocation();
+            if ( location != null ) {
+                pothole = new Pothole( location, createPotholeId(), sevatity);
+                addToPotholeList(pothole);
+            }
         }
+
         return pothole;
     }
 
