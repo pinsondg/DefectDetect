@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private GoogleMap gmap;
     private LatLng customLocation;
     private static MapFragment mapFragment;
+    private LocationManager locationManager;
+
+    public boolean ButtonClicked = true;
 
     @SuppressLint("ValidFragment")
     private MapFragment() {
@@ -126,13 +130,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 }
             }
             gmap.setMyLocationEnabled(true);
+
             Location loc = ((MainActivity)this.getActivity()).getLocation();
+
+            //Listens for location updates and calls onLocationChange()
+            gmap.setOnMyLocationButtonClickListener(new LocationChangeListener(getActivity(), getContext(), mapFragment));
+
+            locationManager = (LocationManager)getContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,this);
+            //gmap.setOnCameraMoveListener(new LocationChangeListener(getActivity(), getContext(), mapFragment));
+
             if ( loc != null && customLocation == null) {
                 moveToLocation(loc.getLatitude(), loc.getLongitude());
             } else if(customLocation != null){
+                ButtonClicked = false;
                 moveToLocation( customLocation.latitude, customLocation.longitude );
             }
-
         } catch(SecurityException e) {
             if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
@@ -167,6 +180,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     private void moveToLocation( double lat, double lng ) {
         LatLng location = new LatLng(lat, lng);
         gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, (float) 14.25));
+        boolean b = false;
+        //gmap.setMyLocationEnabled(b);
     }
 
     @Override
@@ -213,9 +228,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         super.onLowMemory();
     }
 
+
     @Override
     public void onLocationChanged(Location location) {
-
+        if(ButtonClicked) {
+            Log.i("Message: ", "Location changed, " + location.getAccuracy() + " , " + location.getLatitude() + "," + location.getLongitude());
+            CameraUpdate locUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), gmap.getCameraPosition().zoom);
+            gmap.animateCamera(locUpdate);
+        }
     }
 
     @Override

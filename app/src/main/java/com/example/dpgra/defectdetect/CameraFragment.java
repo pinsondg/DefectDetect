@@ -1,12 +1,10 @@
 package com.example.dpgra.defectdetect;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.AssetManager;
-import android.hardware.Camera;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,7 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -112,12 +110,12 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.camera_fragment, container, false);
         mOpenCvCameraView = (CameraBridgeViewBase) rootView.findViewById(R.id.CameraView);
-
+        //Check if the device is not an emulator
         String myDeviceModel = android.os.Build.MODEL;
         if(!myDeviceModel.toLowerCase().contains("sdk")) {
+            //Rotate the camera view 90 degrees clockwise
             mOpenCvCameraView.setAngle(90);
         }
-        System.out.print(myDeviceModel);
         mOpenCvCameraView.setCvCameraViewListener(this);
         return rootView;
     }
