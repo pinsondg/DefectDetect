@@ -179,9 +179,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
      */
     private void moveToLocation( double lat, double lng ) {
         LatLng location = new LatLng(lat, lng);
-        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, (float) 14.25));
-        boolean b = false;
-        //gmap.setMyLocationEnabled(b);
+        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, (float) 14.75));
     }
 
     @Override
@@ -227,7 +225,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         mapView.onLowMemory();
         super.onLowMemory();
     }
-
 
     @Override
     public void onLocationChanged(Location location) {

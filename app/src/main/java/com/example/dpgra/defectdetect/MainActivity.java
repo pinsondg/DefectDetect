@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             }
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out);
             Fragment fragment = null;
             if ( currentMenuItem.getItemId() != item.getItemId() ) {
                 transaction.remove(currentFragment);

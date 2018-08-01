@@ -45,6 +45,7 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     private boolean isHidden = false;
     private boolean annimationEnded = true;
     private int origHeight;
+    private float y0;
 
     @Nullable
     @Override
@@ -224,4 +225,33 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     public void onAnimationRepeat(Animator animator) {
 
     }
+
+    /* Experiment
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((View)view.getParent()).getLayoutParams();
+        if ( !isHidden ) {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    y0 = motionEvent.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float y = motionEvent.getY();
+                    if ( ((View)view.getParent()).getY() >= 0 && y < y0 ) {
+                        System.out.println(y);
+                        ((View)editText.getParent()).animate().translationYBy( y - y0 ).setDuration(0);
+                        ((View)view.getParent()).animate().yBy( y - y0 ).setDuration(0);
+                        //params.bottomMargin = -editText.getMeasuredHeight();
+                        //((View)view.getParent()).setLayoutParams(params);
+                    } else if ( view.getY() <= 0 && y > y0 ) {
+                        ((View)editText.getParent()).animate().translationYBy(y - y0).setDuration(0);
+                        ((View)view.getParent()).animate().yBy(y - y0).setDuration(0);
+                    }
+                    y0 = y;
+                    break;
+            }
+        }
+        return false;
+    }
+    */
 }
