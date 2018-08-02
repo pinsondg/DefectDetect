@@ -44,8 +44,28 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     private int oldScrollY;
     private boolean isHidden = false;
     private boolean animationEnded = true;
+    List<Pothole> new_list = new ArrayList<Pothole>();
     //private int origHeight;
     //private float y0;
+
+    private void clearResults(PotholeListAdapter adapter) {
+        if(new_list.isEmpty()) {
+            PotholeList.getInstance().clear();
+            adapter.clear();
+        } else {
+            int n = 0;
+            while(!new_list.isEmpty()) {
+                for (int j = 0; j < PotholeList.getInstance().size(); j++) {
+                    if (new_list.get(n).getId().matches(PotholeList.getInstance().get(j).getId())) {
+                        //adapter.remove(PotholeList.getInstance().get(j));
+                        adapter.remove(new_list.get(n));
+                        PotholeList.getInstance().remove(j);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     @Nullable
     @Override
@@ -92,10 +112,11 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    PotholeList.getInstance().clear();
+                                    //PotholeList.getInstance().clear();
                                     ListView listView = rootView.findViewById(R.id.list_view);
                                     PotholeListAdapter adapter = (PotholeListAdapter) listView.getAdapter();
-                                    adapter.clear();
+                                    //Clears all potholes displayed in list
+                                    clearResults(adapter);
                                     adapter.notifyDataSetChanged();
                                 }
                             }).setNegativeButton("No", null).show();
@@ -104,9 +125,8 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
 
 
 
-
     public List<Pothole> search_for_string(String str) {
-        List<Pothole> new_list = PotholeList.getInstance();
+        new_list = PotholeList.getInstance();
         str = str.toLowerCase();
         if (!str.isEmpty()) {
             new_list = new ArrayList<Pothole>();
@@ -115,11 +135,14 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
                 Pothole temp = i.next();
                 String LatAsString = String.format("%.4f",new Double(temp.getLat()));
                 String LongAsString = String.format("%.4f",new Double(temp.getLon()));
+                String Severity = new Integer(temp.getSize()).toString();
                 if (temp.getId().contains(str)) {
                     new_list.add(temp);
                 } else if (LatAsString.contains(str)) {
                     new_list.add(temp);
                 } else if (LongAsString.contains(str)) {
+                    new_list.add(temp);
+                } else if (Severity.matches(str)) {
                     new_list.add(temp);
                 }
             }
