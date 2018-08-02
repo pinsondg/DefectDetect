@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,4 +9,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:backgroundTint="@android:color/transparent"
+        app:elevation="0dp"
+        app:rippleColor="@color/common_google_signin_btn_text_light_focused"
+        app:srcCompat="@drawable/ic_rotate_right_white_24dp" />
+
 </FrameLayout>

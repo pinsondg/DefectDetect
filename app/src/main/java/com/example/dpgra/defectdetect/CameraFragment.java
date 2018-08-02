@@ -46,7 +46,7 @@ import model.PotholeList;
  * @author Daniel Pinson, Vamsi Yadav
  * @version 1.0
  */
-public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvCameraViewListener2, View.OnClickListener {
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private Darknet net;
@@ -59,7 +59,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     private CameraFragment() {
         super();
         potholeList = potholeList.getInstance();
-        OrientationIsValid = 2;
+        OrientationIsValid = 0;
     }
 
     /**
@@ -121,7 +121,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
             //Rotate the camera view 90 degrees clockwise
             mOpenCvCameraView.setAngle(90);
         }
-
+        rootView.findViewById(R.id.floatingActionButton2).setOnClickListener(this);
         mOpenCvCameraView.setCvCameraViewListener(this);
         return rootView;
     }
@@ -194,7 +194,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         old_mRgbaT.release();
         */
         Mat temp = null;
-        if(OrientationIsValid == 1) {
+        for (int i = 0; i < OrientationIsValid; i++ ) {
 
             temp = frame.t();
             Core.flip(temp, temp, 1);
@@ -202,8 +202,6 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
             temp.release();
         }
 
-        System.out.print(mRgbaT.cols());
-        System.out.print(mRgbaT.rows());
         int cols = mRgbaT.cols();
         int rows = mRgbaT.rows();
         Size cropSize;
@@ -366,4 +364,11 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         return potholeList.add(pothole);
     }
 
+    @Override
+    public void onClick(View view) {
+        OrientationIsValid++;
+        if ( OrientationIsValid > 3 ) {
+            OrientationIsValid = 0;
+        }
+    }
 }
