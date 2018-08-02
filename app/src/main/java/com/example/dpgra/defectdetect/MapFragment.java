@@ -55,7 +55,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @SuppressLint("ValidFragment")
     private MapFragment() {
         super();
-        locationListener = new LocationChangeListener(getActivity(), getContext(), this);
+        locationListener = new LocationChangeListener(this);
     }
 
     /**

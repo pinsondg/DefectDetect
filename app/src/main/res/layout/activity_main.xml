@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:itemBackground="?attr/colorPrimary"
+        android:background="@drawable/button"
         app:itemIconTint="@drawable/selector_bottombar_item"
         app:itemTextColor="@drawable/selector_bottombar_item"
         app:menu="@menu/bottombar_menu" />

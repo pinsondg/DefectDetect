@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -103,6 +104,9 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if ( getActivity() != null ) {
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
     }
 
     @Nullable

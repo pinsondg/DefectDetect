@@ -27,7 +27,6 @@ public class SlidingSpringAnimation extends DataSetObserver implements View.OnTo
     private View button;
     private View view;
     private float x1;
-    private float x2;
     private Fragment fragment;
     private Pothole pothole;
 
@@ -41,7 +40,6 @@ public class SlidingSpringAnimation extends DataSetObserver implements View.OnTo
      */
     public SlidingSpringAnimation(View button, View view, int direction, Fragment fragment, Pothole pothole) {
         this.x1 = 0;
-        this.x2 = 0;
         this.button = button;
         this.direction = direction;
         isRevealed = false;
@@ -144,7 +142,6 @@ public class SlidingSpringAnimation extends DataSetObserver implements View.OnTo
         animation.start();
         isRevealed = false;
         x1 = 0;
-        x2 = 0;
     }
 
     public boolean isRevealed() {

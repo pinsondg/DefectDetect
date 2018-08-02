@@ -45,9 +45,7 @@ import model.PotholeList;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private Darknet net;
     private BottomNavigationView bottomNavigationView;
-    private List<Fragment> fragList;
     private Fragment currentFragment;
     private MenuItem currentMenuItem;
 
@@ -62,10 +60,13 @@ public class MainActivity extends AppCompatActivity {
             if ( currentFragment instanceof PotholeListFragment ) {
                 ((PotholeListFragment) currentFragment).getEditText().clearFocus();
             }
+            //set up fragment manager and transaction manager
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.animator.fade_in, R.animator.fade_out);
             Fragment fragment = null;
+
+            //switch fragments
             if ( currentMenuItem.getItemId() != item.getItemId() ) {
                 transaction.remove(currentFragment);
                 switch (item.getItemId()) {
