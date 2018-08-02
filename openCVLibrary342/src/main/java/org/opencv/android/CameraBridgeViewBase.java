@@ -130,15 +130,15 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
         mMatrix.reset();
         if (isFrontCamera) {
             //Flip Horizoltal
-            //mMatrix.preScale(-1, 1, hw, hh);
+            mMatrix.preScale(1, -1, hw, hh);
         }
 
         mMatrix.preTranslate(hw, hh);
         if (isFrontCamera)
             //Changed this
-            mMatrix.preRotate(angle);
+            mMatrix.preRotate(0);
         else
-            mMatrix.preRotate(angle);
+            mMatrix.preRotate(0);
         mMatrix.preTranslate(-hw, -hh);
         //}
     }

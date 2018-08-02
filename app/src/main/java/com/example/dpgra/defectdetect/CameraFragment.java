@@ -112,10 +112,12 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         mOpenCvCameraView = (CameraBridgeViewBase) rootView.findViewById(R.id.CameraView);
         //Check if the device is not an emulator
         String myDeviceModel = android.os.Build.MODEL;
+
         if(!myDeviceModel.toLowerCase().contains("sdk")) {
             //Rotate the camera view 90 degrees clockwise
             mOpenCvCameraView.setAngle(90);
         }
+
         mOpenCvCameraView.setCvCameraViewListener(this);
         return rootView;
     }
@@ -182,12 +184,22 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         Mat frame = inputFrame.rgba();
         Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGRA2RGB);
         Mat mRgbaT = frame;
+/*        old_mRgbaT = frame.t();
+        Core.flip(old_mRgbaT, old_mRgbaT, 1);
+        Imgproc.resize(old_mRgbaT, mRgbaT, frame.size());
+        old_mRgbaT.release();
+        */
+        Mat temp = null;
         if(OrientationIsValid == 1) {
-            mRgbaT = frame.t();
-            Core.flip(mRgbaT, mRgbaT, 1);
-            Imgproc.resize(mRgbaT, mRgbaT, frame.size());
+
+            temp = frame.t();
+            Core.flip(temp, temp, 1);
+            Imgproc.resize(temp, mRgbaT, frame.size());
+            temp.release();
         }
 
+        System.out.print(mRgbaT.cols());
+        System.out.print(mRgbaT.rows());
         int cols = mRgbaT.cols();
         int rows = mRgbaT.rows();
         Size cropSize;
@@ -205,18 +217,19 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         rows = subFrame.rows();
         int sevarity = 0;
         if ( net != null ) {
+            double confidence, xCenter, yCenter, width, height = 0;
             Mat retMat = net.forwardLoadedNetwork(mRgbaT);
             for ( int i = 0; i < retMat.rows(); i++ ) {
-                double confidence = retMat.get(i, 5)[0];
+                confidence = retMat.get(i, 5)[0];
                 if ( confidence > 0.67 ) {
                     printMat(retMat.row(i));
                     //System.out.println("YESSSSSS");
-                    double xCenter = retMat.get(i, 0)[0]*cols;
-                    double yCenter = retMat.get(i, 1)[0]*rows;
-                    double width = retMat.get(i, 2)[0]*cols;
-                    double height = retMat.get(i, 3)[0]*rows;
-                    Imgproc.rectangle(subFrame, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
-                            , yCenter + height / 2), new Scalar(255, 0, 0), 10);
+                    xCenter = retMat.get(i, 0)[0]*mRgbaT.cols();
+                    yCenter = retMat.get(i, 1)[0]*mRgbaT.rows();
+                    width = retMat.get(i, 2)[0]*mRgbaT.cols();
+                    height = retMat.get(i, 3)[0]*mRgbaT.rows();
+                    Imgproc.rectangle(mRgbaT, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
+                            , yCenter + height / 2), new Scalar(255, 0, 0), 4);
                     sevarity++;
                 }
             }
@@ -231,12 +244,12 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         return mRgbaT;
     }
 
-    private Pothole createPothole( int sevatity ) {
+    private Pothole createPothole( int severity ) {
         Pothole pothole = null;
         if ( this.getActivity() != null ) {
             Location location = ((MainActivity) this.getActivity()).getLocation();
             if ( location != null ) {
-                pothole = new Pothole( location, createPotholeId(), sevatity);
+                pothole = new Pothole( location, createPotholeId(), severity);
                 addToPotholeList(pothole);
             }
         }
