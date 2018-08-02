@@ -12,16 +12,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
-public class LocationChangeListener implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveStartedListener {
+public class LocationChangeListener implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraMoveStartedListener {
 
-    private Activity activity;
-    private Context context;
     private MapFragment fragment;
-    private LocationManager locationManager;
 
-    public LocationChangeListener(Activity activity, Context context, MapFragment fragment) {
-        this.activity = activity;
-        this.context = context;
+    public LocationChangeListener(MapFragment fragment) {
         this.fragment =fragment;
     }
 
@@ -31,11 +26,7 @@ public class LocationChangeListener implements GoogleMap.OnMyLocationButtonClick
         fragment.ButtonClicked = true;
         return fragment.ButtonClicked;
     }
-
-    @Override
-    public void onCameraMove() {
-        fragment.ButtonClicked = false;
-    }
+    
 
     @Override
     public void onCameraMoveStarted(int i) {

@@ -43,9 +43,9 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     private EditText editText;
     private int oldScrollY;
     private boolean isHidden = false;
-    private boolean annimationEnded = true;
-    private int origHeight;
-    private float y0;
+    private boolean animationEnded = true;
+    //private int origHeight;
+    //private float y0;
 
     @Nullable
     @Override
@@ -74,7 +74,7 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     @SuppressLint("NewApi")
     private void createList(List<Pothole> potholeList) {
         ListView listView = (ListView) rootView.findViewById(R.id.list_view);
-        origHeight = listView.getHeight();
+        //origHeight = listView.getHeight();
         listView.setAdapter( new PotholeListAdapter(this.getActivity(), potholeList, this));
         listView.setOnScrollListener(this);
         listView.setFastScrollEnabled(true);
@@ -191,13 +191,13 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     @Override
     public void onScroll(AbsListView absListView, int i, int i1, int i2) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((View)absListView.getParent()).getLayoutParams();
-        if ( oldScrollY < i && !isHidden && annimationEnded) {
+        if ( oldScrollY < i && !isHidden && animationEnded) {
             ((View)editText.getParent()).animate().translationYBy( -editText.getHeight()).setDuration(300).setListener(this);
             ((View)absListView.getParent()).animate().yBy(-editText.getHeight()).setDuration(300);
             params.bottomMargin = -editText.getMeasuredHeight();
             ((View)absListView.getParent()).setLayoutParams(params);
             isHidden = true;
-        } else if ( oldScrollY > i && isHidden && annimationEnded ){
+        } else if ( oldScrollY > i && isHidden && animationEnded ){
             ((View)editText.getParent()).animate().translationYBy( editText.getHeight()).setDuration(300).setListener(this);
             ((View)absListView.getParent()).animate().yBy(editText.getHeight()).setDuration(300);
             ((View)absListView.getParent()).setLayoutParams(params);
@@ -208,12 +208,12 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onAnimationStart(Animator animator) {
-        annimationEnded = false;
+        animationEnded = false;
     }
 
     @Override
     public void onAnimationEnd(Animator animator) {
-        annimationEnded = true;
+        animationEnded = true;
     }
 
     @Override

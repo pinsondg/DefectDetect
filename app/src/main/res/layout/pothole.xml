@@ -12,7 +12,7 @@
             android:id="@+id/del_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@android:color/holo_red_light"
+            android:background="@drawable/button2"
             android:text="Delete"
             android:layout_gravity="right"
             android:textColor="@android:color/white" />
@@ -29,9 +29,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:background="@android:color/white">
-
-
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/button3">
 
             <TextView
                 android:id="@+id/pothole_id"
