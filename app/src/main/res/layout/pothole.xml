@@ -31,7 +31,7 @@
             android:orientation="horizontal"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/button3">
+            android:background="@android:color/white">
 
             <TextView
                 android:id="@+id/pothole_id"

@@ -41,6 +41,7 @@
     <uses-feature android:name="android.hardware.camera.front.autofocus" android:required="false"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-feature android:name="android.hardware.location.gps" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 
 </manifest>

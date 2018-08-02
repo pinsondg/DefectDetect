@@ -78,7 +78,7 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
-
+        rootView.findViewById(R.id.more_button).setOnClickListener(new MoreMenuHandler(rootView));
         createList(PotholeList.getInstance());
         clearButton = rootView.findViewById(R.id.floatingActionButton);
         clearButton.setOnClickListener(this);
