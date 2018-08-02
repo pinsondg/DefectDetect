@@ -36,36 +36,16 @@ import model.Pothole;
 import model.PotholeList;
 
 @SuppressLint("NewApi")
-public class PotholeListFragment extends Fragment implements View.OnClickListener, TextWatcher, AbsListView.OnScrollListener, Animator.AnimatorListener {
+public class PotholeListFragment extends Fragment implements TextWatcher, AbsListView.OnScrollListener, Animator.AnimatorListener {
 
     private View rootView;
-    private FloatingActionButton clearButton;
     private EditText editText;
     private int oldScrollY;
     private boolean isHidden = false;
     private boolean animationEnded = true;
-    List<Pothole> new_list = new ArrayList<Pothole>();
+    private List<Pothole> new_list = new ArrayList<Pothole>();
     //private int origHeight;
     //private float y0;
-
-    private void clearResults(PotholeListAdapter adapter) {
-        if(new_list.isEmpty()) {
-            PotholeList.getInstance().clear();
-            adapter.clear();
-        } else {
-            int n = 0;
-            while(!new_list.isEmpty()) {
-                for (int j = 0; j < PotholeList.getInstance().size(); j++) {
-                    if (new_list.get(n).getId().matches(PotholeList.getInstance().get(j).getId())) {
-                        //adapter.remove(PotholeList.getInstance().get(j));
-                        adapter.remove(new_list.get(n));
-                        PotholeList.getInstance().remove(j);
-                        break;
-                    }
-                }
-            }
-        }
-    }
 
     @Nullable
     @Override
@@ -78,10 +58,8 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
-        rootView.findViewById(R.id.more_button).setOnClickListener(new MoreMenuHandler(rootView));
+        rootView.findViewById(R.id.more_button).setOnClickListener(new MoreMenuHandler(this, rootView));
         createList(PotholeList.getInstance());
-        clearButton = rootView.findViewById(R.id.floatingActionButton);
-        clearButton.setOnClickListener(this);
         return rootView;
     }
 
@@ -101,29 +79,9 @@ public class PotholeListFragment extends Fragment implements View.OnClickListene
     }
 
 
-
-    @Override
-    public void onClick(View view) {
-        if ( view.getId() == rootView.findViewById(R.id.floatingActionButton).getId() ) {
-            new AlertDialog.Builder(this.getContext())
-                    .setTitle("Alert")
-                    .setMessage("Do you want to clear the list?")
-                    .setPositiveButton("Yes",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    //PotholeList.getInstance().clear();
-                                    ListView listView = rootView.findViewById(R.id.list_view);
-                                    PotholeListAdapter adapter = (PotholeListAdapter) listView.getAdapter();
-                                    //Clears all potholes displayed in list
-                                    clearResults(adapter);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }).setNegativeButton("No", null).show();
-        }
+    public List<Pothole> getNew_list() {
+        return new_list;
     }
-
-
 
     public List<Pothole> search_for_string(String str) {
         new_list = PotholeList.getInstance();

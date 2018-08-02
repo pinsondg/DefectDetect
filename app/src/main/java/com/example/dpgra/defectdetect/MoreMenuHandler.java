@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,8 +28,10 @@ import model.PotholeList;
 public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private View mainView;
+    private Fragment fragment;
 
-    public MoreMenuHandler( View mainView ) {
+    public MoreMenuHandler(Fragment fragment, View mainView ) {
+        this.fragment = fragment;
         this.mainView = mainView;
     }
 
@@ -112,12 +115,35 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                PotholeList.getInstance().clear();
+                                //PotholeList.getInstance().clear();
                                 ListView listView = mainView.findViewById(R.id.list_view);
                                 PotholeListAdapter adapter = (PotholeListAdapter) listView.getAdapter();
-                                adapter.clear();
+                                //Clears all potholes displayed in list
+                                clearResults(adapter);
                                 adapter.notifyDataSetChanged();
                             }
                         }).setNegativeButton("No", null).show();
     }
+
+    private void clearResults(PotholeListAdapter adapter) {
+        if ( fragment instanceof  PotholeListFragment ) {
+            if(((PotholeListFragment) fragment).getNew_list().isEmpty()) {
+                PotholeList.getInstance().clear();
+                adapter.clear();
+            } else {
+                int n = 0;
+                while(!((PotholeListFragment) fragment).getNew_list().isEmpty()) {
+                    for (int j = 0; j < PotholeList.getInstance().size(); j++) {
+                        if (((PotholeListFragment) fragment).getNew_list().get(n).getId().matches(PotholeList.getInstance().get(j).getId())) {
+                            //adapter.remove(PotholeList.getInstance().get(j));
+                            adapter.remove(((PotholeListFragment) fragment).getNew_list().get(n));
+                            PotholeList.getInstance().remove(j);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
