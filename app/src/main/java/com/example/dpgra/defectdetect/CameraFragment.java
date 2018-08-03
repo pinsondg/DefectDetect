@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import android.view.WindowManager;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -49,6 +50,7 @@ import model.PotholeList;
  */
 public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvCameraViewListener2, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
+    private View rootView;
     private CameraBridgeViewBase mOpenCvCameraView;
     private Darknet net;
     private static CameraFragment cameraFragment;
@@ -116,6 +118,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.camera_fragment, container, false);
+        this.rootView = rootView;
         mOpenCvCameraView = (CameraBridgeViewBase) rootView.findViewById(R.id.CameraView);
         //Check if the device is not an emulator
         String myDeviceModel = android.os.Build.MODEL;
@@ -382,6 +385,8 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         confidenceThresh = (double) i / 100;
+        TextView textView = rootView.findViewById(R.id.confidence);
+        textView.setText("Confidence Threshold: " + (confidenceThresh * 100));
     }
 
     @Override
