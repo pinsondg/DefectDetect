@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.WindowManager;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -46,13 +47,14 @@ import model.PotholeList;
  * @author Daniel Pinson, Vamsi Yadav
  * @version 1.0
  */
-public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvCameraViewListener2, View.OnClickListener {
+public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvCameraViewListener2, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private Darknet net;
     private static CameraFragment cameraFragment;
     private PotholeList potholeList;
     private Integer OrientationIsValid;
+    private double confidenceThresh;
 
 
     @SuppressLint("ValidFragment")
@@ -60,6 +62,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         super();
         potholeList = potholeList.getInstance();
         OrientationIsValid = 0;
+        confidenceThresh = .6;
     }
 
     /**
@@ -123,6 +126,8 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         }
         rootView.findViewById(R.id.floatingActionButton2).setOnClickListener(this);
         mOpenCvCameraView.setCvCameraViewListener(this);
+        SeekBar seekBar = rootView.findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(this);
         return rootView;
     }
 
@@ -223,7 +228,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
             Mat retMat = net.forwardLoadedNetwork(mRgbaT);
             for ( int i = 0; i < retMat.rows(); i++ ) {
                 confidence = retMat.get(i, 5)[0];
-                if ( confidence > 0.70 ) {
+                if ( confidence > confidenceThresh ) {
                     printMat(retMat.row(i));
                     //System.out.println("YESSSSSS");
                     xCenter = retMat.get(i, 0)[0]*mRgbaT.cols();
@@ -372,5 +377,20 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
         if ( OrientationIsValid > 3 ) {
             OrientationIsValid = 0;
         }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        confidenceThresh = (double) i / 100;
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }

@@ -5,24 +5,54 @@
     android:layout_height="match_parent"
     xmlns:opencv="http://schemas.android.com/tools">
 
-    <org.opencv.android.JavaCamera2View
-        android:id="@+id/CameraView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        opencv:showfps="true"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
+    <FrameLayout
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <org.opencv.android.JavaCamera2View
+            android:id="@+id/CameraView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="visible"
+            opencv:showfps="true"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="visible"
+            app:backgroundTint="@android:color/transparent"
+            app:elevation="0dp"
+            app:rippleColor="@color/common_google_signin_btn_text_light_focused"
+            app:srcCompat="@drawable/ic_rotate_right_white_24dp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="visible"
-        app:backgroundTint="@android:color/transparent"
-        app:elevation="0dp"
-        app:rippleColor="@color/common_google_signin_btn_text_light_focused"
-        app:srcCompat="@drawable/ic_rotate_right_white_24dp" />
+        android:layout_gravity="bottom"
+        android:visibility="visible">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confidence Threshold"
+            android:layout_gravity="center"
+            android:gravity="top"/>
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:min="60"/>
+
+    </FrameLayout>
+
 
 </FrameLayout>
