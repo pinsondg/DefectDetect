@@ -231,8 +231,8 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
         if ( splitLine.length == 4 ) {
             try {
                 id = CameraFragment.getInstance().createPotholeId();
-                lat = new Double(splitLine[1]);
-                lon = new Double(splitLine[2]);
+                lat = new Double(splitLine[2]);
+                lon = new Double(splitLine[1]);
                 size = new Integer(splitLine[3].trim());
                 pothole = new Pothole( lat, lon, id, size );
                 PotholeList.getInstance().add(pothole);

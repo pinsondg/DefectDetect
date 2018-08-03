@@ -10,7 +10,8 @@
         android:id="@+id/list_layout"
         android:layout_width="match_parent"
         android:layout_below="@id/search_layout"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
         <ListView
             android:id="@+id/list_view"
             android:layout_width="match_parent"
