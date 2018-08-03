@@ -65,7 +65,9 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
                 break;
             case R.id.export:
                 if ( !exportList() ) {
-                    Toast.makeText(fragment.getActivity(), "Error File not exported!", Toast.LENGTH_SHORT);
+                    Toast.makeText(fragment.getActivity(), "Error File not exported!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(fragment.getActivity(), "File exported to Documents", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.load:
