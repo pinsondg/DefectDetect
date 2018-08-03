@@ -30,7 +30,7 @@
             android:layout_height="wrap_content">
 
             <EditText android:id="@+id/search_bar"
-                android:drawableLeft="@android:drawable/ic_search_category_default"
+                android:drawableRight="@android:drawable/ic_search_category_default"
                 android:layout_alignParentTop="true"
                 android:hint="Enter search phrase here"
                 android:layout_width="wrap_content"
@@ -39,13 +39,13 @@
                 android:singleLine="true"
                 android:imeOptions="actionDone"
                 />
-
             <ImageButton
                 android:id="@+id/more_button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/button3"
-                android:src="@drawable/ic_more_vert_grey_24dp" />
+                android:src="@drawable/ic_more_vert_grey_24dp"
+                android:layout_gravity="left"/>
 
         </LinearLayout>
 
