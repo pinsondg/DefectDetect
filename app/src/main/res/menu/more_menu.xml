@@ -6,5 +6,7 @@
           android:id="@+id/export"/>
     <item android:title="Clear List"
           android:id="@+id/clear"/>
+    <item android:title="Import CSV"
+          android:id="@+id/load"/>
 
 </menu>

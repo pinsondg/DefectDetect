@@ -10,22 +10,33 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.obsez.android.lib.filechooser.ChooserDialog;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Pothole;
 import model.PotholeList;
 
-public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, ChooserDialog.Result{
 
     private View mainView;
     private Fragment fragment;
+    private File loadedFile;
+    private List<OnFileLoadedListener> onFileLoadedListeners;
 
     public MoreMenuHandler(Fragment fragment, View mainView ) {
         this.fragment = fragment;
         this.mainView = mainView;
+        loadedFile = null;
+        onFileLoadedListeners = new ArrayList<OnFileLoadedListener>(0);
     }
 
     @Override
@@ -41,6 +52,10 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
     }
 
 
+    public void addOnItemsLoadedListener( OnFileLoadedListener listener ) {
+        onFileLoadedListeners.add(listener);
+    }
+
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         switch (menuItem.getItemId())
@@ -50,13 +65,27 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
                 break;
             case R.id.export:
                 if ( !exportList() ) {
-                    Toast.makeText(mainView.getContext(), "Error File not exported!", Toast.LENGTH_SHORT);
+                    Toast.makeText(fragment.getActivity(), "Error File not exported!", Toast.LENGTH_SHORT);
                 }
+                break;
+            case R.id.load:
+                showFileChooser();
                 break;
         }
         return false;
     }
 
+    private void notifyListeners() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                for ( OnFileLoadedListener listener : onFileLoadedListeners ) {
+                    listener.onFileLoaded(loadedFile);
+                }
+            }
+        };
+        runnable.run();
+    }
     private boolean exportList() {
         boolean flag = true;
         File file = null;
@@ -140,4 +169,79 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
         }
     }
 
+    private void showFileChooser() {
+        loadedFile = null;
+        new ChooserDialog().with(mainView.getContext())
+                .withStartFile(null)
+                .withChosenListener(this)
+                .build()
+                .show();
+    }
+
+    @Override
+    public void onChoosePath(String s, File file) {
+        if ( s.endsWith(".csv") ) {
+            loadedFile = file;
+            if ( !loadFile() && loadedFile != null ) {
+                Toast.makeText(fragment.getActivity(), "Formatting error: Could not load specified file!", Toast.LENGTH_SHORT).show();
+            } else if ( loadedFile != null ){
+                Toast.makeText(fragment.getActivity(), "File Loaded Successfully!", Toast.LENGTH_SHORT).show();
+                notifyListeners();
+            }
+        }
+    }
+
+    private boolean loadFile() {
+        boolean flag = true;
+        BufferedReader reader;
+        if ( loadedFile != null ) {
+            try {
+                reader = new BufferedReader( new FileReader(loadedFile) );
+            } catch (FileNotFoundException e) {
+                return false;
+            }
+            try {
+                reader.readLine();
+                String line = reader.readLine();
+                while (line != null) {
+                    if ( !createNewPothole(line) ) {
+                        flag = false;
+                        break;
+                    }
+                    line = reader.readLine();
+                }
+            } catch (IOException e ) {
+                return false;
+            }
+
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
+
+    private boolean createNewPothole( String line ) {
+        boolean flag = true;
+        Pothole pothole = null;
+        Double lat = null;
+        Double lon = null;
+        Integer size = null;
+        String id = "";
+        String[] splitLine = line.split(",");
+        if ( splitLine.length == 4 ) {
+            try {
+                id = CameraFragment.getInstance().createPotholeId();
+                lat = new Double(splitLine[1]);
+                lon = new Double(splitLine[2]);
+                size = new Integer(splitLine[3].trim());
+                pothole = new Pothole( lat, lon, id, size );
+                PotholeList.getInstance().add(pothole);
+            } catch (NumberFormatException e) {
+                flag = false;
+            }
+        } else {
+            flag = false;
+        }
+        return flag;
+    }
 }

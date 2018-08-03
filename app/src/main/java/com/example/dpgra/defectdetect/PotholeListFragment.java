@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +25,7 @@ import model.Pothole;
 import model.PotholeList;
 
 @SuppressLint("NewApi")
-public class PotholeListFragment extends Fragment implements TextWatcher, AbsListView.OnScrollListener, Animator.AnimatorListener {
+public class PotholeListFragment extends Fragment implements TextWatcher, AbsListView.OnScrollListener, Animator.AnimatorListener, OnFileLoadedListener {
 
     private View rootView;
     private EditText editText;
@@ -46,7 +47,9 @@ public class PotholeListFragment extends Fragment implements TextWatcher, AbsLis
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
-        rootView.findViewById(R.id.more_button).setOnClickListener(new MoreMenuHandler(this, rootView));
+        MoreMenuHandler handler = new MoreMenuHandler(this, rootView);
+            handler.addOnItemsLoadedListener(this);
+        rootView.findViewById(R.id.more_button).setOnClickListener(handler);
         createList(PotholeList.getInstance());
         return rootView;
     }
@@ -105,9 +108,7 @@ public class PotholeListFragment extends Fragment implements TextWatcher, AbsLis
             //Log.i("TAG","ENNNTEEERRR PRESSED!");
              List<Pothole> results = search_for_string(editText.getText().toString());
             createList(results);
-            ListView listView = rootView.findViewById(R.id.list_view);
-            PotholeListAdapter adapter = (PotholeListAdapter) listView.getAdapter();
-            adapter.notifyDataSetChanged();
+            notifyAdapterOfChange();
             return true;
         }
         return false;
@@ -125,6 +126,10 @@ public class PotholeListFragment extends Fragment implements TextWatcher, AbsLis
         //Log.i("TAG","ENNNTEEERRR PRESSED!");
         List<Pothole> results = search_for_string(editText.getText().toString());
         createList(results);
+        notifyAdapterOfChange();
+    }
+
+    private void notifyAdapterOfChange() {
         ListView listView = rootView.findViewById(R.id.list_view);
         PotholeListAdapter adapter = (PotholeListAdapter) listView.getAdapter();
         adapter.notifyDataSetChanged();
@@ -193,6 +198,11 @@ public class PotholeListFragment extends Fragment implements TextWatcher, AbsLis
     @Override
     public void onAnimationRepeat(Animator animator) {
 
+    }
+
+    @Override
+    public void onFileLoaded(File file) {
+        notifyAdapterOfChange();
     }
 
     /* Experiment

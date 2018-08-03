@@ -264,7 +264,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
      *
      * @return the pothole id
      */
-    private String createPotholeId() {
+    public String createPotholeId() {
         PotholeList list = PotholeList.getInstance();
         int num = 0;
         if ( !list.isEmpty() ) {
