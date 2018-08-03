@@ -1,26 +1,19 @@
 package com.example.dpgra.defectdetect;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 
 import model.Pothole;
 import model.PotholeList;
@@ -73,6 +66,7 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
             file = getPublicAlbumStorageDir( "potholes.csv");
             stream = new FileOutputStream(file);
             writer = new OutputStreamWriter(stream);
+            writer.write("ID, Lat, Lon, Size\n");
             for (Pothole pothole : PotholeList.getInstance() ) {
                 String str = pothole.getId() + ", " + pothole.getLat() + ", " + pothole.getLon() + ", " + pothole.getSize() + "\n";
                 writer.write(str);

@@ -1,16 +1,8 @@
 package com.example.dpgra.defectdetect;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.location.LocationManager;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.LatLng;
 
 public class LocationChangeListener implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraMoveStartedListener {
 

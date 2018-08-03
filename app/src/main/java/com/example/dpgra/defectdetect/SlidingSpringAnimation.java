@@ -2,7 +2,6 @@ package com.example.dpgra.defectdetect;
 
 import android.database.DataSetObserver;
 import android.support.animation.DynamicAnimation;
-import android.support.animation.FlingAnimation;
 import android.support.animation.SpringAnimation;
 import android.support.v4.app.Fragment;
 import android.view.MotionEvent;

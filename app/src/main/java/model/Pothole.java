@@ -1,13 +1,6 @@
 package model;
 
 import android.location.Location;
-import android.location.LocationManager;
-import android.location.LocationProvider;
-import android.media.Image;
-
-import com.google.android.gms.maps.GoogleMap;
-
-import org.opencv.core.Size;
 
 import java.io.Serializable;
 
