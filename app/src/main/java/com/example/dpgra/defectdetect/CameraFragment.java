@@ -232,7 +232,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     height = retMat.get(i, 3)[0]*mRgbaT.rows();
                     Imgproc.rectangle(mRgbaT, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
                             , yCenter + height / 2), new Scalar(255, 0, 0), 4);
-                    Imgproc.putText(mRgbaT, String.format("%.4f", new Double(confidence)),new Point((xCenter - width / 2), (yCenter - height / 2 ) - 5)
+                    Imgproc.putText(mRgbaT, String.format("%.4f", new Double(confidence * 100)) + "%",new Point((xCenter - width / 2), (yCenter - height / 2 ) - 5)
                             , 1, 1, new Scalar(255,0,0), 2);
                     sevarity++;
                 }
