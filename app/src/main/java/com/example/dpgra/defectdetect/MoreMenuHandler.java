@@ -99,7 +99,8 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
             writer = new OutputStreamWriter(stream);
             writer.write("ID, Lat, Lon, Size\n");
             for (Pothole pothole : PotholeList.getInstance() ) {
-                String str = pothole.getId() + ", " + pothole.getLat() + ", " + pothole.getLon() + ", " + pothole.getSize() + "\n";
+                String str = pothole.getId() + ", " + String.format("%.4f", pothole.getLat()) + ", "
+                        + String.format("%.4f", pothole.getLon() ) + ", " + pothole.getSize() + "\n";
                 writer.write(str);
             }
             writer.close();
@@ -184,16 +185,22 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
     public void onChoosePath(String s, File file) {
         if ( s.endsWith(".csv") ) {
             loadedFile = file;
-            if ( !loadFile() && loadedFile != null ) {
-                Toast.makeText(fragment.getActivity(), "Formatting error: Could not load specified file!", Toast.LENGTH_SHORT).show();
-            } else if ( loadedFile != null ){
-                Toast.makeText(fragment.getActivity(), "File Loaded Successfully!", Toast.LENGTH_SHORT).show();
-                notifyListeners();
+            try {
+                if ( !loadFile() && loadedFile != null ) {
+                    Toast.makeText(fragment.getActivity(), "Unknown Error: Could not load file.", Toast.LENGTH_SHORT).show();
+                } else if ( loadedFile != null ){
+                    Toast.makeText(fragment.getActivity(), "File Loaded Successfully!", Toast.LENGTH_SHORT).show();
+                    notifyListeners();
+                }
+            } catch (CSVFormatException e) {
+                Toast.makeText(fragment.getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(fragment.getActivity(), "Error: File type must be of .csv", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean loadFile() {
+    private boolean loadFile() throws CSVFormatException {
         boolean flag = true;
         BufferedReader reader;
         if ( loadedFile != null ) {
@@ -206,23 +213,19 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
                 reader.readLine();
                 String line = reader.readLine();
                 while (line != null) {
-                    if ( !createNewPothole(line) ) {
-                        flag = false;
-                        break;
-                    }
+                    createNewPothole(line);
                     line = reader.readLine();
                 }
             } catch (IOException e ) {
                 return false;
             }
-
         } else {
             flag = false;
         }
         return flag;
     }
 
-    private boolean createNewPothole( String line ) {
+    private void createNewPothole( String line ) throws CSVFormatException {
         boolean flag = true;
         Pothole pothole = null;
         Double lat = null;
@@ -233,17 +236,25 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
         if ( splitLine.length == 4 ) {
             try {
                 id = CameraFragment.getInstance().createPotholeId();
-                lat = new Double(splitLine[2]);
-                lon = new Double(splitLine[1]);
+                lat = new Double(splitLine[1]);
+                if ( lat < -90 && lat > 90 ) {
+                    throw new CSVFormatException("Latitude is out of range. Pothole id " + splitLine[0]);
+                }
+                lon = new Double(splitLine[2]);
+                if ( lon < -180 && lon > 180 ) {
+                    throw new CSVFormatException("Longitude is out of range. Pothole id " + splitLine[0]);
+                }
                 size = new Integer(splitLine[3].trim());
+                if ( size < 1 ) {
+                    size = 1;
+                }
                 pothole = new Pothole( lat, lon, id, size );
                 PotholeList.getInstance().add(pothole);
             } catch (NumberFormatException e) {
-                flag = false;
+                throw new CSVFormatException("Numbers not correctly formatted. " + e.getMessage());
             }
         } else {
-            flag = false;
+            throw new CSVFormatException("There needs to be only four columns in CSV file.");
         }
-        return flag;
     }
 }
