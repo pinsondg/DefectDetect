@@ -9,7 +9,6 @@
         android:id="@+id/CameraView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="visible"
         opencv:showfps="true"/>
 
     <android.support.design.widget.FloatingActionButton

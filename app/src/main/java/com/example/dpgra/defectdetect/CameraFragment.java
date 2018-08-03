@@ -223,7 +223,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
             Mat retMat = net.forwardLoadedNetwork(mRgbaT);
             for ( int i = 0; i < retMat.rows(); i++ ) {
                 confidence = retMat.get(i, 5)[0];
-                if ( confidence > 0.67 ) {
+                if ( confidence > 0.70 ) {
                     printMat(retMat.row(i));
                     //System.out.println("YESSSSSS");
                     xCenter = retMat.get(i, 0)[0]*mRgbaT.cols();
@@ -232,6 +232,8 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     height = retMat.get(i, 3)[0]*mRgbaT.rows();
                     Imgproc.rectangle(mRgbaT, new Point((xCenter - width / 2), (yCenter - height / 2 )), new Point(xCenter + width / 2
                             , yCenter + height / 2), new Scalar(255, 0, 0), 4);
+                    Imgproc.putText(mRgbaT, String.format("%.4f", new Double(confidence)),new Point((xCenter - width / 2), (yCenter - height / 2 ) - 5)
+                            , 1, 1, new Scalar(255,0,0), 2);
                     sevarity++;
                 }
             }

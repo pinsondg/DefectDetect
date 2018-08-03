@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
         }
-        
+
         //Set default fragment
         FragmentManager manager = getSupportFragmentManager();
         currentFragment = MapFragment.getInstance();
