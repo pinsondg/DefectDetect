@@ -46,12 +46,11 @@ public class DeleteAnimation implements View.OnClickListener, Animator.AnimatorL
     public void onClick(View view) {
         if ( list instanceof PotholeList ) {
             animate(view);
-
             list.remove(position);
         } else {
             animate(view);
-            list.remove(position);
             PotholeList.getInstance().remove(this.view.getAdapter().getItem(position));
+            list.remove(position);
         }
     }
 
