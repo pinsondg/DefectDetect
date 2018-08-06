@@ -16,6 +16,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -103,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide(); // hide the title bar
         setContentView(R.layout.activity_main);
         readInData();
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
@@ -271,4 +275,16 @@ public class MainActivity extends AppCompatActivity {
         setToMapView();
         super.onLowMemory();
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            System.out.println("Touch Down X:" + event.getX() + " Y:" + event.getY());
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            System.out.println("Touch Up X:" + event.getX() + " Y:" + event.getY());
+        }
+        return super.onTouchEvent(event);
+    }
+
 }
