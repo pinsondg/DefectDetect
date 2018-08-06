@@ -1,4 +1,5 @@
 package com.example.dpgra.defectdetect;
+import android.animation.Animator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -53,24 +55,11 @@ public class PotholeListAdapter extends ArrayAdapter<Pothole> {
         if ( !list.isEmpty() ) {
             final Pothole pothole = getItem(position);
             // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.pothole, parent, false);
-            }
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.pothole, parent, false);
             Button button = convertView.findViewById(R.id.del_button);
             LinearLayout linearLayout = convertView.findViewById(R.id.liner_layout);
             SlidingSpringAnimation animation = new SlidingSpringAnimation(button, linearLayout, SlidingSpringAnimation.RIGHT_TO_LEFT, fragment, pothole);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if ( list instanceof PotholeList ) {
-                        list.remove(position);
-                    } else {
-                        list.remove(position);
-                        PotholeList.getInstance().remove(pothole);
-                    }
-                    notifyDataSetChanged();
-                }
-            });
+            button.setOnClickListener(new DeleteAnimation((ListView) fragment.getView().findViewById(R.id.list_view), list, position));
             linearLayout.setOnTouchListener(animation);
             this.registerDataSetObserver(animation);
             // Lookup view for data population
