@@ -45,18 +45,24 @@ public class DeleteAnimation implements View.OnClickListener, Animator.AnimatorL
     @Override
     public void onClick(View view) {
         if ( list instanceof PotholeList ) {
-            ((View)view.getParent().getParent()).animate().alpha(0).setDuration(200);
-            for ( int i = position + 1; i < list.size(); i++ ) {
-                getViewByPosition(i).animate().translationYBy(-view.getHeight()).setDuration(300).setListener(this);
-            }
+            ((View)view.getParent().getParent()).animate().alpha(0).setDuration(200).setListener(this);
             list.remove(position);
+            animateUp();
         } else {
-            ((View)view.getParent().getParent()).animate().alpha(0).setDuration(300).setListener(this);
-            for ( int i = position + 1; i < list.size(); i++ ) {
-                getViewByPosition(i).animate().translationYBy(-view.getHeight()).setDuration(200).setListener(this);
-            }
+            ((View)view.getParent().getParent()).animate().alpha(0).setDuration(200).setListener(this);
             list.remove(position);
             PotholeList.getInstance().remove(this.view.getAdapter().getItem(position));
+            animateUp();
+        }
+    }
+
+    private void animateUp() {
+        if ( position != list.size() - 2 ) {
+            for ( int i = position + 1; i < list.size() - 1; i++ ) {
+                getViewByPosition(i).animate().translationYBy(-view.getHeight()).setDuration(300).setListener(this);
+            }
+        } else {
+            ((ArrayAdapter<Pothole>)view.getAdapter()).notifyDataSetChanged();
         }
     }
 
