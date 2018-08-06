@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@android:color/white"
-                android:text="Confidence Threshold: 60"/>
+                android:text="Confidence Threshold: 60%"/>
             <SeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="fill_parent"

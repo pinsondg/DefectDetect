@@ -36,7 +36,7 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
         this.fragment = fragment;
         this.mainView = mainView;
         loadedFile = null;
-        onFileLoadedListeners = new ArrayList<OnFileLoadedListener>(0);
+        onFileLoadedListeners = new ArrayList<>(0);
     }
 
     @Override
@@ -88,11 +88,12 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
         };
         runnable.run();
     }
+
     private boolean exportList() {
         boolean flag = true;
-        File file = null;
-        OutputStreamWriter writer = null;
-        FileOutputStream stream = null;
+        File file;
+        OutputStreamWriter writer;
+        FileOutputStream stream;
         try {
             file = getPublicAlbumStorageDir( "potholes.csv");
             stream = new FileOutputStream(file);
@@ -121,7 +122,7 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
 
     private File getPublicAlbumStorageDir(String name) throws IOException {
         // Get the directory for the user's public pictures directory.
-        File file = null;
+        File file;
         File retFile = null;
         if (isExternalStorageWritable()) {
             file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath());

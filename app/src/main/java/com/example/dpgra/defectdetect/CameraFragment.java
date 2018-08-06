@@ -144,6 +144,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     @Override
     public void onCameraViewStarted(int width, int height) {
 
+        /*
         if(OrientationIsValid == 2) {
             new AlertDialog.Builder(this.getContext())
                     .setTitle("Alert")
@@ -160,14 +161,10 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                     OrientationIsValid = 1;
                 }
             }).show();
-
-
         }
-
-        AssetManager assetManager = getResources().getAssets();
+        */
         String cfgFile = getPath(".cfg", this.getActivity());
         String weightsFile = getPath(".weights", this.getActivity());
-
 
         if ( cfgFile != null && weightsFile != null ) {
             net = new Darknet( cfgFile, weightsFile );
@@ -344,7 +341,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
                 break;
             }
         }
-        BufferedInputStream inputStream = null;
+        BufferedInputStream inputStream;
         try {
             // Read data from assets.
             inputStream = new BufferedInputStream(assetManager.open(fileName));
@@ -386,7 +383,7 @@ public class CameraFragment extends Fragment implements CameraBridgeViewBase.CvC
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         confidenceThresh = (double) i / 100;
         TextView textView = rootView.findViewById(R.id.confidence);
-        textView.setText("Confidence Threshold: " + (confidenceThresh * 100));
+        textView.setText("Confidence Threshold: " + (confidenceThresh * 100) + "%");
     }
 
     @Override
