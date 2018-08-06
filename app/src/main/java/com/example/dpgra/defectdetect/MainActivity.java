@@ -15,8 +15,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -101,17 +104,31 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Determines what to do when an item on the bottom navigation bar is selected.
+     */
+    private BottomNavigationView.OnHoverListener mOnHoverListener
+            = new BottomNavigationView.OnHoverListener() {
+        @Override
+        public boolean onHover(View view, MotionEvent motionEvent) {
+            view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+            Log.i("MAIN", "showwwwwww");
+            return true;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         getSupportActionBar().hide(); // hide the title bar
         setContentView(R.layout.activity_main);
         readInData();
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(R.id.map);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        bottomNavigationView.setOnHoverListener(mOnHoverListener);
         currentMenuItem = bottomNavigationView.getMenu().findItem(R.id.map);
         if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                 || (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
