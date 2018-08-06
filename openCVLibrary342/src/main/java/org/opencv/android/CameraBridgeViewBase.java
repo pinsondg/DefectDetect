@@ -127,8 +127,6 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
         float hw = this.getWidth() / 2.0f;
         float hh = this.getHeight() / 2.0f;
         boolean isFrontCamera = Camera.CameraInfo.CAMERA_FACING_FRONT == mCameraIndex;
-        Log.i(TAG, new Integer(getWidth()).toString());
-        Log.i(TAG, new Integer(getHeight()).toString());
         mMatrix.reset();
         if (!isFrontCamera) {
             //Flip Horizoltal
