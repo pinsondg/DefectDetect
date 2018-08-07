@@ -2,6 +2,8 @@ package com.example.dpgra.defectdetect;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,11 +17,14 @@ import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import model.Pothole;
 import model.PotholeList;
@@ -85,6 +90,14 @@ public class PotholeListFragment extends Fragment implements TextWatcher, AbsLis
                 String LatAsString = String.format("%.4f",new Double(temp.getLat()));
                 String LongAsString = String.format("%.4f",new Double(temp.getLon()));
                 String Severity = new Integer(temp.getSize()).toString();
+                Geocoder geocoder = new Geocoder(this.getContext(), Locale.getDefault());
+                List<Address> addresses = null;
+                try {
+                    addresses = geocoder.getFromLocation(temp.getLat(), temp.getLon(), 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String address = addresses.get(0).getAddressLine(0);
                 if (temp.getId().contains(str)) {
                     new_list.add(temp);
                 } else if (LatAsString.contains(str)) {
@@ -92,6 +105,8 @@ public class PotholeListFragment extends Fragment implements TextWatcher, AbsLis
                 } else if (LongAsString.contains(str)) {
                     new_list.add(temp);
                 } else if (Severity.matches(str)) {
+                    new_list.add(temp);
+                } else if ( address.contains(str)) {
                     new_list.add(temp);
                 }
             }

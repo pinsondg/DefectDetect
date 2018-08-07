@@ -31,6 +31,7 @@ public class PotholeListAdapter extends ArrayAdapter<Pothole> {
 
     private List<Pothole> list;
     private PotholeListFragment fragment;
+    private TextView textView;
 
     /**
      * Constructor for the pothole list adapter.
@@ -43,6 +44,7 @@ public class PotholeListAdapter extends ArrayAdapter<Pothole> {
         super(context, 0, list);
         this.list = list;
         this.fragment = fragment;
+        textView = null;
     }
 
     /**
@@ -86,5 +88,4 @@ public class PotholeListAdapter extends ArrayAdapter<Pothole> {
         }
         return convertView;
     }
-
 }
