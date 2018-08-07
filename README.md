@@ -3,6 +3,8 @@ This is an android app that identifies potholes on a road and marks their locati
 
 ## Getting Started
 To download and run the app you need to get [android studio](https://developer.android.com/studio/). Then clone this repo to get the code and simply follow the instructions provided [here](https://developer.android.com/training/basics/firstapp/running-app). This will allow you to create either a virtual device or use your own physical device.
+You must also download the OpenCV 3.1 sdk from their website, and install OpenCV Manager using command:
+adb install <path-to-opencv3.1-download>/apk/OpenCV_3.1.0_Manager_3.10_<your-specific-architecture>.apk
 
 ## App Features
 This app uses a deep neural network called YOLO that is implemented on the Darknet framework. We trained the network on 1,800+ images in order to get accurate detections. This application has three different tabs: a map tab, a camera tab, and a list tab. The app automatically saves your data every time it is closed (but not if it crashes).
