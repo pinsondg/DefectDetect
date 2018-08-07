@@ -11,6 +11,7 @@ This is where the application starts off when first opening it. It uses a google
 ![alt text](https://github.com/pinsondg/DefectDetect/blob/master/screenshots/Screenshot_1533579507.png)
 ### Camera Tab
 The camera tab is where the magic of the app really happens. This brings up the phone's back camera and uses the neural network to draw a box around any pothole it finds. Note that the first time you open this tab, you will be asked to confirm if you want the current camera view. On some devices, the camera view is sideways. If this is your case, just click the rotate button in the upper left-hand corner to rotate the camera view. Once the phone finds a detection on the camera, you will be able to see the pothole appear on the map and in the list.
+![alt text](https://github.com/pinsondg/DefectDetect/blob/master/screenshots/Screenshot_1533580816.png)
 ### List Tab
 The list tab displays all the potholes your device has found in an ordered list. To delete an item from the list simply swipe left on an item and press the delete button that appears. To search for a specific pothole, just start typing in the search bar and the list will be modified. Taping on a list item will bring the user back to the map and to the marker of the pothole they selected. Taping the green 'X' button in the bottom righthand corner will prompt the user if they want to clear the list.
 ![alt text](https://github.com/pinsondg/DefectDetect/blob/master/screenshots/Screenshot_1533579541.png)
@@ -23,8 +24,7 @@ If you would like to modify the code, submit a pull request.
 No known bugs as of now.
 
 ### Minor Bugs
-1. When swiping a list item, every i + 7 th item also swipes but hitting the delete button only deletes the item for that button.
-2. Camera framerate is slow on older phones.
+1. Camera framerate is slow on older phones.
 
 # Contact Us
 Daniel Pinson - pinsondg@dukes.jmu.edu
