@@ -115,7 +115,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             MapsInitializer.initialize(this.getActivity());
             //System.out.println("ON MAP READY!");
             gmap = googleMap;
-            gmap.setOnMarkerClickListener(new MapClickListener(getActivity()));
+            gmap.setOnMarkerClickListener(locationListener);
             PotholeList potholeList = PotholeList.getInstance();
             if (  potholeList != null && !potholeList.isEmpty() ) {
                 Iterator<Pothole> i = potholeList.iterator();

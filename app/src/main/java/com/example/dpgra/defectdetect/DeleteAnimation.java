@@ -69,7 +69,7 @@ public class DeleteAnimation implements View.OnClickListener, Animator.AnimatorL
         final int firstListItemPosition = view.getFirstVisiblePosition();
         final int lastListItemPosition = firstListItemPosition + view.getChildCount() - 1;
 
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+        if (pos < firstListItemPosition || pos > lastListItemPosition) {
             return view.getAdapter().getView(pos, null, view);
         } else {
             final int childIndex = pos - firstListItemPosition;

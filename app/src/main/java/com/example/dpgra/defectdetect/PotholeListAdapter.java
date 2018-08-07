@@ -1,6 +1,8 @@
 package com.example.dpgra.defectdetect;
 import android.animation.Animator;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import model.Pothole;
 import model.PotholeList;
@@ -68,7 +72,15 @@ public class PotholeListAdapter extends ArrayAdapter<Pothole> {
             TextView severity = (TextView) convertView.findViewById(R.id.severity);
             // Populate the data into the template view using the data object
             header.setText(pothole.getId());
-            coords.setText("Lat: " + String.format("%.4f", pothole.getLat()) + ", Lon: " + String.format("%.4f", pothole.getLon()));
+            Geocoder geocoder = new Geocoder(fragment.getContext(), Locale.getDefault());
+            List<Address> addresses = null;
+            try {
+                addresses = geocoder.getFromLocation(pothole.getLat(), pothole.getLon(), 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String address = addresses.get(0).getAddressLine(0);
+            coords.setText(address);
             severity.setText("Severity: " + pothole.getSize());
             // Return the completed view to render on screen
         }
