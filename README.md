@@ -20,7 +20,7 @@ If you would like to modify the code, submit a pull request.
 
 ## Known Bugs
 ### Major Bugs
-1. Due to the high CPU usage of a neural network, the app can crash on older phones.
+No known bugs as of now.
 
 ### Minor Bugs
 1. When swiping a list item, every i + 7 th item also swipes but hitting the delete button only deletes the item for that button.
