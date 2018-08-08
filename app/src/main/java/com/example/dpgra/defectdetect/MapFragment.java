@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -179,7 +178,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
      */
     private void moveToLocation( double lat, double lng ) {
         LatLng location = new LatLng(lat, lng);
-        gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, (float) 16.75));
+        gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, (float) 16));
     }
 
     @Override
@@ -230,8 +229,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void onLocationChanged(Location location) {
         if(ButtonClicked) {
             Log.i("Message: ", "Location changed, " + location.getAccuracy() + " , " + location.getLatitude() + "," + location.getLongitude());
-            CameraUpdate locUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), gmap.getCameraPosition().zoom);
-            gmap.animateCamera(locUpdate);
+            moveToLocation(location.getLatitude(), location.getLongitude());
         }
     }
 

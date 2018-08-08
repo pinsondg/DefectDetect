@@ -1,4 +1,4 @@
-package com.example.dpgra.defectdetect;
+package animations;
 
 import android.animation.Animator;
 import android.view.View;

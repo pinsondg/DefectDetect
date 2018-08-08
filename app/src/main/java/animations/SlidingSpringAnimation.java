@@ -1,4 +1,4 @@
-package com.example.dpgra.defectdetect;
+package animations;
 
 import android.database.DataSetObserver;
 import android.support.animation.DynamicAnimation;
@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.dpgra.defectdetect.MainActivity;
+import com.example.dpgra.defectdetect.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import model.Pothole;

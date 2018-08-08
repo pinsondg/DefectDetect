@@ -97,14 +97,14 @@ public class PotholeListFragment extends Fragment implements TextWatcher, AbsLis
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                String address = addresses.get(0).getAddressLine(0);
+                String address = addresses.get(0).getAddressLine(0).toLowerCase();
                 if (temp.getId().contains(str)) {
                     new_list.add(temp);
                 } else if (LatAsString.contains(str)) {
                     new_list.add(temp);
                 } else if (LongAsString.contains(str)) {
                     new_list.add(temp);
-                } else if (Severity.matches(str)) {
+                } else if (Severity.equals(str)) {
                     new_list.add(temp);
                 } else if ( address.contains(str)) {
                     new_list.add(temp);

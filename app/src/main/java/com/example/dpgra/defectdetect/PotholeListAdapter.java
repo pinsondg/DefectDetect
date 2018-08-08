@@ -1,5 +1,4 @@
 package com.example.dpgra.defectdetect;
-import android.animation.Animator;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -17,8 +16,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import animations.DeleteAnimation;
+import animations.SlidingSpringAnimation;
 import model.Pothole;
-import model.PotholeList;
 
 /**
  * The adapter for the pothole list. Transforms each item in the pothole list into a view that can
