@@ -281,12 +281,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            System.out.println("Touch Down X:" + event.getX() + " Y:" + event.getY());
-        }
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            System.out.println("Touch Up X:" + event.getX() + " Y:" + event.getY());
-        }
         return super.onTouchEvent(event);
     }
 
