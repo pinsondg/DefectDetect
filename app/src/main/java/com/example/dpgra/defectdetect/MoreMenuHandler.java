@@ -127,7 +127,7 @@ public class MoreMenuHandler implements View.OnClickListener, PopupMenu.OnMenuIt
         if (isExternalStorageWritable()) {
             file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath());
             if (!file.mkdirs()) {
-                System.out.print("Not created");
+                //System.out.print("Not created");
             }
             retFile = new File(file, name);
         }
