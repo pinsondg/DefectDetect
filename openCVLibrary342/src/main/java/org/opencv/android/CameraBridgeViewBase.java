@@ -132,7 +132,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             //Flip Horizoltal
             mMatrix.preScale(1, 1.2f, getWidth(), getHeight());
         }
-
+        /*
         mMatrix.preTranslate(hw, hh);
         if (isFrontCamera)
             //Changed this
@@ -140,6 +140,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
         else
             mMatrix.preRotate(0);
         mMatrix.postTranslate(-hw, -hh);
+        */
         //}
     }
 
